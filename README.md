@@ -1,2 +1,2 @@
 # project-flumen
-3D mobile game
+3D Card game -- "Kerri ne Dore" Re-imagined
