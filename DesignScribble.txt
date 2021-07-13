@@ -1,0 +1,17 @@
+Project "Flumen" - Scribble
+
+Plugins/Assets from UE Marketplace
+    - EasyAds Pro
+    - Easy Texture Creator
+
+    - Magic Circle Creator
+    - Material VFX (good for 'warp' spawning effect)
+    - SDF Robo progress bars?
+
+--------------------------
+
+System Design
+
+Networking
+    GameInstance - a separate Graph for handling Networking-related events
+
