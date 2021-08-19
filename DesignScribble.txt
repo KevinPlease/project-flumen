@@ -8,10 +8,15 @@ Plugins/Assets from UE Marketplace
     - Material VFX (good for 'warp' spawning effect)
     - SDF Robo progress bars?
 
---------------------------
+==================================================================================
 
-System Design
+States the Game can be in (eg: Classic):
 
-Networking
-    GameInstance - a separate Graph for handling Networking-related events
+	1 - Cleanup (players remove the duplicate cards from their hand)
+	2 - In Progress
 
+Player states:
+	1 - Waiting
+	2 - Picking
+	3 - BeingPicked
+	4 - Spectating
