@@ -10,13 +10,8 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
-States the Game can be in (eg: Classic):
+Gameplay Logic:
 
-	1 - Cleanup (players remove the duplicate cards from their hand)
-	2 - In Progress
-
-Player states:
-	1 - Waiting
-	2 - Picking
-	3 - BeingPicked
-	4 - Spectating
+	- Game Mode contains the server side logic
+		- GM informs the Game State on each client for changes.
+		- GS informs the PC on the updated state, data ..
