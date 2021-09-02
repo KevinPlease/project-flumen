@@ -10,8 +10,23 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
-Gameplay Logic:
+Daily Notes:
 
-	- Game Mode contains the server side logic
-		- GM informs the Game State on each client for changes.
-		- GS informs the PC on the updated state, data ..
+- Checking for card pairs from ST_Card[]:
+	
+	Approach 1:
+	- While iterating CardData[] to spawn actors:
+		- 
+
+- GM keeps a dict of
+
+	CardMaster - Singleton in GM
+	{
+		CardDeck { key = playerIndex } -- add each player as required
+			{
+				ST_Card[] ...
+			}
+	}
+
+			
+Order of cards should be kept by server -- replicated to all clients the same
