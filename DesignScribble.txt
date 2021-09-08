@@ -11,22 +11,5 @@ Plugins/Assets from UE Marketplace
 ==================================================================================
 
 Daily Notes:
-
-- Checking for card pairs from ST_Card[]:
-	
-	Approach 1:
-	- While iterating CardData[] to spawn actors:
-		- 
-
-- GM keeps a dict of
-
-	CardMaster - Singleton in GM
-	{
-		CardDeck { key = playerIndex } -- add each player as required
-			{
-				ST_Card[] ...
-			}
-	}
-
-			
-Order of cards should be kept by server -- replicated to all clients the same
+	GameBoard should spawn decks with a position which is based on player index
+	eg: Deck for player 0 spawns at 0
