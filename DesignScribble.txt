@@ -13,3 +13,12 @@ Plugins/Assets from UE Marketplace
 Daily Notes:
 	GameBoard should spawn decks with a position which is based on player index
 	eg: Deck for player 0 spawns at 0
+
+
+
+Cards in deck
+
+Option #1 - BP_Cards will always attached together on either end based on their Index_in_Hand
+		- J
+
+Option #2 - CardDeck uses the position of cards to be removed
