@@ -12,6 +12,13 @@ Plugins/Assets from UE Marketplace
 
 Daily Notes:
 
-Cards in deck:
-	Option #1 - BP_Cards will always attached together on either end based on their Index_in_Hand
-		- J
+
+Issue #34
+
+	1 - PC picks Card from other Deck.
+	2 - PC tells GM about picked Index.
+	3 - REQUEST END TURN: GM gets from CardMaster the ST_Card for the passed index.
+		OR - GM gets .... from PC(get nextPlayerIndex from GS)
+	3 - END/NEXT TURN: GM gets from CardMaster the ST_Card for the passed index AND
+		calls to the active PC passing the selected card AND
+		ALL GS to update with next turn.
