@@ -13,8 +13,18 @@ Plugins/Assets from UE Marketplace
 Daily Notes:
 
 
-Issue #35
+Issue #40 - Win/Lose Scenario
 
-	
-TEST:
+    One loser -> Player who is stuck with the 13 in Deck.
+    Other players are ranked from First who cleared Deck to last.
 
+    Winning Scenario #1 -- PC Culls his/her last Card pair.
+    1 - GM checks for player's Deck size after ActivePlayer culls CardPair.
+    2 - If size == 0, Call GS (replicate all) to:
+        2.1 - GS: Update 'ST_GameResult' of first winner player index.
+        2.2 - Notify PCs of current 'ST_GameResult' and for Winner => (change phase, disable input ...)
+
+
+    Winning Scenario #2 -- NextPlayer wins when ActivePlayer removes his/her last Card from Deck.
+    1 - GM checks for NextPlayer's Deck size after the ActivePlayer removes a card from his/her Deck.
+    2 - Call same GS event as in step 2 above.
