@@ -13,11 +13,3 @@ Plugins/Assets from UE Marketplace
 Daily Notes:
 
 
-- When should players be allowed to cull cards during the Roundtable phase?
-    [ Waiting, BeingPicked ]
-
-- What If?
-    Not showing CullHints during the Roundtable phase for new possible CardPairs in Deck?
-        => Keep player engaged throughout the gameplay.
-        => 'Punish' player for not having attention,
-            since other player can take away one of the Cards from the CardPair.
