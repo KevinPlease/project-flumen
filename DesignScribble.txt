@@ -12,4 +12,9 @@ Plugins/Assets from UE Marketplace
 
 Daily Notes:
 
+PlayFab Events - Player Economy
+
+ - Coins -
+
+Add/Update based on GameResult string [ "won", "saved", "lost" ]
 
