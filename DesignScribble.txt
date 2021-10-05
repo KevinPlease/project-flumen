@@ -12,9 +12,24 @@ Plugins/Assets from UE Marketplace
 
 Daily Notes:
 
-PlayFab Events - Player Economy
+Card Repositioning System:
+    - Cards will have a Collision box in the middle (look @Sketches)
+    - OnCollision with another Card => notify the owner Deck that a request to switch positions is made
+    - Deck switches the card actor positions with each other -- updates new indices for all Cards after
+        new attachments are made.
+    - CHECK: Notify GM of the changes in card indices -> GM updates the CardMaster for the specific Player Deck.
 
- - Coins -
+@CardDeck - Card Pos Changes (i.e: Move subject Card from pos x to position Y where a target Card is)
+    1- ASSUME: subject Card is currently PickedUp, moved to the respective target Card's collision and
+        the repositioning is confirmed (eg: clicking/touching again)
+    2- Store the curLocation of the target Card so we move the subject Card later.
+    3- Call BP_Deck to shift(Animate*) the target Card (along with the children) along the horizontal axis, to make
+        room for the new subject Card.
+    4- Animate* the subject Card into the stored location in step 2.
+    3- Call the UpdateCardActorPosition for both Cards:
+        - Target will be attached to the subject Card.
+        - Subject card will be attached to the Card on its' left.
+    4- BP_Deck should update its O_Deck reference.
+    5- Notify the GM of the updated card indices...
 
-Add/Update based on GameResult string [ "won", "saved", "lost" ]
-
+*Animate: This is related with the next Issue, #18 so don't focus now.
