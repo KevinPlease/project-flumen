@@ -10,10 +10,3 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
-
-- Card Themes (dynamic Material Instance when creating Cards)
-
-    - PlayerProfile saves information about selected CardTheme (eg: player selects from Options...)
-    - BP_CardDeck will ask from PC->GI for the current CardTheme and pass the info when calling Create for each Card.
-    - BP_Card will create a dynamic material instance and assign the textures from the CardTheme data as params.
-    
