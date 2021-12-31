@@ -10,3 +10,21 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
+Issue #99
+
+    - Refactor for Card Seeking design
+
+    ON PICKUP
+        - Reuse same code as Card Selected OTHERWISE attempt with Shift Material UP
+        
+    Moving the Holding Card
+        - Instead of updating location on tick, 
+            use the Moved check where we detect if a new card is overlapped on finger.
+            - Keep the code which saves the original starting location of the holding card.
+            - If overlapped new seeking card {
+                - Set the location of the holding card to the location of the seeking card. (without the z axis)
+                - Set the location of the seeking card to the original location of the holding card
+            }
+        
+        The idea is for the Seeking functionality to impact only 2 cards instead of shifting the entire list of cards.
+        So we swap only 2 of the affected cards: the holding card and the current seeking card.
