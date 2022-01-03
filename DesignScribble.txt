@@ -10,21 +10,27 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
-Issue #99
+Issue #106 - Card Deck positioning on screen
 
-    - Refactor for Card Seeking design
+    Currently -- The GameBoard handles position shifts for the CardDeck:
+        Each card addition/removal shifts the relative offset of the entire CardDeck.
+			ISSUE: Because on card added/removed should shift the Deck DEPENDING if the card index
+				is left or right of the 'center' index of the Deck.
+		1- Handled by the GameBoard.
+			Move logic within the CardDeck itself?
+		2- The shift offset is hardcoded as a Config value in the BP_GameBoard.
+			Research for a more dynamic approach - use of Card offset variable?
+		
 
-    ON PICKUP
-        - Reuse same code as Card Selected OTHERWISE attempt with Shift Material UP
-        
-    Moving the Holding Card
-        - Instead of updating location on tick, 
-            use the Moved check where we detect if a new card is overlapped on finger.
-            - Keep the code which saves the original starting location of the holding card.
-            - If overlapped new seeking card {
-                - Set the location of the holding card to the location of the seeking card. (without the z axis)
-                - Set the location of the seeking card to the original location of the holding card
-            }
-        
-        The idea is for the Seeking functionality to impact only 2 cards instead of shifting the entire list of cards.
-        So we swap only 2 of the affected cards: the holding card and the current seeking card.
+	New -- The CardDeck will be responsible of keeping the Cards in the center of itself.
+		- Q: How to find the center coordinate of the CardDeck from the amount of cards?
+			- CardDeck spawns card using an offset for each, depending on index.
+				=> offset x CEIL(card length / 2) = relative coordinate for the center of deck
+		
+		1- Remove the dispatcher events GameBoard <-> CardDeck.
+			- On card added/removed -> directly call the shift logic*.
+		2- Use the card distance offset (both available in CardDeck and the Card itself) 
+		*Shift Logic:
+			- Should calculate the CardDeck's center offset on card added/removed
+				AND set the relative location of the CardHolder.
+					(should always be on the X axis and negated)
