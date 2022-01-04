@@ -9,28 +9,3 @@ Plugins/Assets from UE Marketplace
     - SDF Robo progress bars?
 
 ==================================================================================
-
-Issue #106 - Card Deck positioning on screen
-
-    Currently -- The GameBoard handles position shifts for the CardDeck:
-        Each card addition/removal shifts the relative offset of the entire CardDeck.
-			ISSUE: Because on card added/removed should shift the Deck DEPENDING if the card index
-				is left or right of the 'center' index of the Deck.
-		1- Handled by the GameBoard.
-			Move logic within the CardDeck itself?
-		2- The shift offset is hardcoded as a Config value in the BP_GameBoard.
-			Research for a more dynamic approach - use of Card offset variable?
-		
-
-	New -- The CardDeck will be responsible of keeping the Cards in the center of itself.
-		- Q: How to find the center coordinate of the CardDeck from the amount of cards?
-			- CardDeck spawns card using an offset for each, depending on index.
-				=> offset x CEIL(card length / 2) = relative coordinate for the center of deck
-		
-		1- Remove the dispatcher events GameBoard <-> CardDeck.
-			- On card added/removed -> directly call the shift logic*.
-		2- Use the card distance offset (both available in CardDeck and the Card itself) 
-		*Shift Logic:
-			- Should calculate the CardDeck's center offset on card added/removed
-				AND set the relative location of the CardHolder.
-					(should always be on the X axis and negated)
