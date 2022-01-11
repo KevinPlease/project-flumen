@@ -36,6 +36,22 @@ void FProjectFlumenGameModuleImpl::ShutdownModule()
 
 #if UE_SERVER
 
+static std::vector<Microsoft::Azure::Gaming::ConnectedPlayer> players;
+
+void playerConnected()
+{
+    // When a new player connects, you can let PlayFab know by adding it to the vector of players and calling updateConnectedPlayers
+    players.push_back(Microsoft::Azure::Gaming::ConnectedPlayer("player_tag"));
+    Microsoft::Azure::Gaming::GSDK::updateConnectedPlayers(players);
+}
+
+// This method will be called on every heartbeat to check if your game is healthy, as such, it should return very quickly
+bool isHealthy()
+{
+    // Return whether your game server should be considered healthy
+    return true;
+}
+
 // Callback function for GSDK
 void OnShutdown()
 {
@@ -44,10 +60,29 @@ void OnShutdown()
 	FGenericPlatformMisc::RequestExit(false);
 }
 
-// Callback function for GSDK
-bool HealthCheck()
+// This method will be called in case #3, when Azure will perform maintenance on the virtual machine
+void onMaintenanceScheduled(tm t)
 {
-	return true;
+#ifdef PLATFORM_WINDOWS
+    time_t local = _mkgmtime(&t);
+    double delta = difftime(local, time(NULL));
+    struct tm buf;
+    char str[26];
+    gmtime_s(&buf, &local);
+    asctime_s(str, sizeof str, &buf);
+    printf("UTC:   %s", str);
+    localtime_s(&buf, &local);
+    asctime_s(str, sizeof str, &buf);
+    printf("local: %s", str);
+    printf("delta: %f", delta);
+#else // Linux
+    time_t local = timegm(&t);
+    double delta = difftime(local, time(NULL));
+    printf("UTC:   %s\n", asctime(gmtime(&local)));
+    printf("local: %s\n", asctime(localtime(&local)));
+    printf("delta: %f\n", delta);
+#endif
+    /* Perform any necessary cleanup, notify your players, etc. */
 }
 
 void FProjectFlumenGameModuleImpl::ConnectToPlayFabAgent()
@@ -59,8 +94,9 @@ void FProjectFlumenGameModuleImpl::ConnectToPlayFabAgent()
 
 		// Call this while your game is initializing, it will start heartbeating to our agent and put the game server in an Initializing state
 		Microsoft::Azure::Gaming::GSDK::start();
-		Microsoft::Azure::Gaming::GSDK::registerHealthCallback(&HealthCheck);
+		Microsoft::Azure::Gaming::GSDK::registerHealthCallback(&isHealthy);
 		Microsoft::Azure::Gaming::GSDK::registerShutdownCallback(&OnShutdown);
+		Microsoft::Azure::Gaming::GSDK::registerMaintenanceCallback(&onMaintenanceScheduled);
 
 		// Call this when your game is done initializing and players can connect
 		// Note: This is a blocking call, and will return when this game server is either allocated or terminated
