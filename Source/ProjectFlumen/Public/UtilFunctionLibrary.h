@@ -13,5 +13,5 @@ UCLASS()
 class PROJECTFLUMEN_API UUtilFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-	
+
 };

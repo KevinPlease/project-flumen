@@ -35,16 +35,6 @@ void FProjectFlumenGameModuleImpl::ShutdownModule()
 }
 
 #if UE_SERVER
-
-static std::vector<Microsoft::Azure::Gaming::ConnectedPlayer> players;
-
-void playerConnected()
-{
-    // When a new player connects, you can let PlayFab know by adding it to the vector of players and calling updateConnectedPlayers
-    players.push_back(Microsoft::Azure::Gaming::ConnectedPlayer("player_tag"));
-    Microsoft::Azure::Gaming::GSDK::updateConnectedPlayers(players);
-}
-
 // This method will be called on every heartbeat to check if your game is healthy, as such, it should return very quickly
 bool isHealthy()
 {
