@@ -33,6 +33,6 @@ public:
 
 private:
 	#if UE_SERVER
-	static std::vector<Microsoft::Azure::Gaming::ConnectedPlayer> players;
+	std::vector<Microsoft::Azure::Gaming::ConnectedPlayer> players;
 	#endif
 };
