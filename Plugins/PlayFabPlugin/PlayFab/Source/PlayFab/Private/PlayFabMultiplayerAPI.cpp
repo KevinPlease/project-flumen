@@ -995,6 +995,7 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::CreateBuildWithCustomContainer(F
     }
     if (request.LinuxInstrumentationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("LinuxInstrumentationConfiguration"), request.LinuxInstrumentationConfiguration);
     if (request.Metadata != nullptr) OutRestJsonObj->SetObjectField(TEXT("Metadata"), request.Metadata);
+    if (request.MonitoringApplicationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("MonitoringApplicationConfiguration"), request.MonitoringApplicationConfiguration);
     OutRestJsonObj->SetNumberField(TEXT("MultiplayerServerCountPerVm"), request.MultiplayerServerCountPerVm);
     if (request.Ports.Num() == 0) {
         OutRestJsonObj->SetFieldNull(TEXT("Ports"));
@@ -1084,6 +1085,7 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::CreateBuildWithManagedContainer(
     }
     if (request.InstrumentationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("InstrumentationConfiguration"), request.InstrumentationConfiguration);
     if (request.Metadata != nullptr) OutRestJsonObj->SetObjectField(TEXT("Metadata"), request.Metadata);
+    if (request.MonitoringApplicationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("MonitoringApplicationConfiguration"), request.MonitoringApplicationConfiguration);
     OutRestJsonObj->SetNumberField(TEXT("MultiplayerServerCountPerVm"), request.MultiplayerServerCountPerVm);
     if (request.Ports.Num() == 0) {
         OutRestJsonObj->SetFieldNull(TEXT("Ports"));
@@ -1104,6 +1106,7 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::CreateBuildWithManagedContainer(
     FString temp_VmSize;
     if (GetEnumValueToString<EAzureVmSize>(TEXT("EAzureVmSize"), request.VmSize, temp_VmSize))
         OutRestJsonObj->SetStringField(TEXT("VmSize"), temp_VmSize);
+    if (request.WindowsCrashDumpConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("WindowsCrashDumpConfiguration"), request.WindowsCrashDumpConfiguration);
 
     // Add Request to manager
     manager->SetRequestObject(OutRestJsonObj);
@@ -1176,6 +1179,7 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::CreateBuildWithProcessBasedServe
     if (request.InstrumentationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("InstrumentationConfiguration"), request.InstrumentationConfiguration);
     OutRestJsonObj->SetBoolField(TEXT("IsOSPreview"), request.IsOSPreview);
     if (request.Metadata != nullptr) OutRestJsonObj->SetObjectField(TEXT("Metadata"), request.Metadata);
+    if (request.MonitoringApplicationConfiguration != nullptr) OutRestJsonObj->SetObjectField(TEXT("MonitoringApplicationConfiguration"), request.MonitoringApplicationConfiguration);
     OutRestJsonObj->SetNumberField(TEXT("MultiplayerServerCountPerVm"), request.MultiplayerServerCountPerVm);
     if (request.OsPlatform.IsEmpty() || request.OsPlatform == "") {
         OutRestJsonObj->SetFieldNull(TEXT("OsPlatform"));
@@ -1293,6 +1297,79 @@ void UPlayFabMultiplayerAPI::HelperCreateRemoteUser(FPlayFabBaseModel response, 
     {
         FMultiplayerCreateRemoteUserResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeCreateRemoteUserResponseResponse(response.responseData);
         OnSuccessCreateRemoteUser.Execute(ResultStruct, mCustomData);
+    }
+    this->RemoveFromRoot();
+}
+
+/** Creates a request to change a title's multiplayer server quotas. */
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::CreateTitleMultiplayerServersQuotaChange(FMultiplayerCreateTitleMultiplayerServersQuotaChangeRequest request,
+    FDelegateOnSuccessCreateTitleMultiplayerServersQuotaChange onSuccess,
+    FDelegateOnFailurePlayFabError onFailure,
+    UObject* customData)
+{
+    // Objects containing request data
+    UPlayFabMultiplayerAPI* manager = NewObject<UPlayFabMultiplayerAPI>();
+    if (manager->IsSafeForRootSet()) manager->AddToRoot();
+    UPlayFabJsonObject* OutRestJsonObj = NewObject<UPlayFabJsonObject>();
+    manager->mCustomData = customData;
+
+    // Assign delegates
+    manager->OnSuccessCreateTitleMultiplayerServersQuotaChange = onSuccess;
+    manager->OnFailure = onFailure;
+    manager->OnPlayFabResponse.AddDynamic(manager, &UPlayFabMultiplayerAPI::HelperCreateTitleMultiplayerServersQuotaChange);
+
+    // Setup the request
+    manager->SetCallAuthenticationContext(request.AuthenticationContext);
+    manager->PlayFabRequestURL = "/MultiplayerServer/CreateTitleMultiplayerServersQuotaChange";
+    manager->useEntityToken = true;
+
+
+    // Serialize all the request properties to json
+    if (request.ChangeDescription.IsEmpty() || request.ChangeDescription == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("ChangeDescription"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("ChangeDescription"), request.ChangeDescription);
+    }
+    if (request.Changes.Num() == 0) {
+        OutRestJsonObj->SetFieldNull(TEXT("Changes"));
+    } else {
+        OutRestJsonObj->SetObjectArrayField(TEXT("Changes"), request.Changes);
+    }
+    if (request.ContactEmail.IsEmpty() || request.ContactEmail == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("ContactEmail"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("ContactEmail"), request.ContactEmail);
+    }
+    if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+    if (request.Notes.IsEmpty() || request.Notes == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("Notes"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("Notes"), request.Notes);
+    }
+    if (request.StartDate.IsEmpty() || request.StartDate == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("StartDate"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("StartDate"), request.StartDate);
+    }
+
+    // Add Request to manager
+    manager->SetRequestObject(OutRestJsonObj);
+
+    return manager;
+}
+
+// Implements FOnPlayFabMultiplayerRequestCompleted
+void UPlayFabMultiplayerAPI::HelperCreateTitleMultiplayerServersQuotaChange(FPlayFabBaseModel response, UObject* customData, bool successful)
+{
+    FPlayFabError error = response.responseError;
+    if (error.hasError && OnFailure.IsBound())
+    {
+        OnFailure.Execute(error, customData);
+    }
+    else if (!error.hasError && OnSuccessCreateTitleMultiplayerServersQuotaChange.IsBound())
+    {
+        FMultiplayerCreateTitleMultiplayerServersQuotaChangeResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeCreateTitleMultiplayerServersQuotaChangeResponseResponse(response.responseData);
+        OnSuccessCreateTitleMultiplayerServersQuotaChange.Execute(ResultStruct, mCustomData);
     }
     this->RemoveFromRoot();
 }
@@ -1742,7 +1819,60 @@ void UPlayFabMultiplayerAPI::HelperEnableMultiplayerServersForTitle(FPlayFabBase
     this->RemoveFromRoot();
 }
 
-/** Gets the URL to upload assets to. */
+/** Gets a URL that can be used to download the specified asset. A sample pre-authenticated url - https://sampleStorageAccount.blob.core.windows.net/gameassets/gameserver.zip?sv=2015-04-05&ss=b&srt=sco&sp=rw&st=startDate&se=endDate&spr=https&sig=sampleSig&api-version=2017-07-29 */
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::GetAssetDownloadUrl(FMultiplayerGetAssetDownloadUrlRequest request,
+    FDelegateOnSuccessGetAssetDownloadUrl onSuccess,
+    FDelegateOnFailurePlayFabError onFailure,
+    UObject* customData)
+{
+    // Objects containing request data
+    UPlayFabMultiplayerAPI* manager = NewObject<UPlayFabMultiplayerAPI>();
+    if (manager->IsSafeForRootSet()) manager->AddToRoot();
+    UPlayFabJsonObject* OutRestJsonObj = NewObject<UPlayFabJsonObject>();
+    manager->mCustomData = customData;
+
+    // Assign delegates
+    manager->OnSuccessGetAssetDownloadUrl = onSuccess;
+    manager->OnFailure = onFailure;
+    manager->OnPlayFabResponse.AddDynamic(manager, &UPlayFabMultiplayerAPI::HelperGetAssetDownloadUrl);
+
+    // Setup the request
+    manager->SetCallAuthenticationContext(request.AuthenticationContext);
+    manager->PlayFabRequestURL = "/MultiplayerServer/GetAssetDownloadUrl";
+    manager->useEntityToken = true;
+
+
+    // Serialize all the request properties to json
+    if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+    if (request.FileName.IsEmpty() || request.FileName == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("FileName"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("FileName"), request.FileName);
+    }
+
+    // Add Request to manager
+    manager->SetRequestObject(OutRestJsonObj);
+
+    return manager;
+}
+
+// Implements FOnPlayFabMultiplayerRequestCompleted
+void UPlayFabMultiplayerAPI::HelperGetAssetDownloadUrl(FPlayFabBaseModel response, UObject* customData, bool successful)
+{
+    FPlayFabError error = response.responseError;
+    if (error.hasError && OnFailure.IsBound())
+    {
+        OnFailure.Execute(error, customData);
+    }
+    else if (!error.hasError && OnSuccessGetAssetDownloadUrl.IsBound())
+    {
+        FMultiplayerGetAssetDownloadUrlResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeGetAssetDownloadUrlResponseResponse(response.responseData);
+        OnSuccessGetAssetDownloadUrl.Execute(ResultStruct, mCustomData);
+    }
+    this->RemoveFromRoot();
+}
+
+/** Gets the URL to upload assets to. A sample pre-authenticated url - https://sampleStorageAccount.blob.core.windows.net/gameassets/gameserver.zip?sv=2015-04-05&ss=b&srt=sco&sp=rw&st=startDate&se=endDate&spr=https&sig=sampleSig&api-version=2017-07-29 */
 UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::GetAssetUploadUrl(FMultiplayerGetAssetUploadUrlRequest request,
     FDelegateOnSuccessGetAssetUploadUrl onSuccess,
     FDelegateOnFailurePlayFabError onFailure,
@@ -2231,6 +2361,59 @@ void UPlayFabMultiplayerAPI::HelperGetTitleEnabledForMultiplayerServersStatus(FP
     this->RemoveFromRoot();
 }
 
+/** Gets a title's server quota change request. */
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::GetTitleMultiplayerServersQuotaChange(FMultiplayerGetTitleMultiplayerServersQuotaChangeRequest request,
+    FDelegateOnSuccessGetTitleMultiplayerServersQuotaChange onSuccess,
+    FDelegateOnFailurePlayFabError onFailure,
+    UObject* customData)
+{
+    // Objects containing request data
+    UPlayFabMultiplayerAPI* manager = NewObject<UPlayFabMultiplayerAPI>();
+    if (manager->IsSafeForRootSet()) manager->AddToRoot();
+    UPlayFabJsonObject* OutRestJsonObj = NewObject<UPlayFabJsonObject>();
+    manager->mCustomData = customData;
+
+    // Assign delegates
+    manager->OnSuccessGetTitleMultiplayerServersQuotaChange = onSuccess;
+    manager->OnFailure = onFailure;
+    manager->OnPlayFabResponse.AddDynamic(manager, &UPlayFabMultiplayerAPI::HelperGetTitleMultiplayerServersQuotaChange);
+
+    // Setup the request
+    manager->SetCallAuthenticationContext(request.AuthenticationContext);
+    manager->PlayFabRequestURL = "/MultiplayerServer/GetTitleMultiplayerServersQuotaChange";
+    manager->useEntityToken = true;
+
+
+    // Serialize all the request properties to json
+    if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+    if (request.RequestId.IsEmpty() || request.RequestId == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("RequestId"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("RequestId"), request.RequestId);
+    }
+
+    // Add Request to manager
+    manager->SetRequestObject(OutRestJsonObj);
+
+    return manager;
+}
+
+// Implements FOnPlayFabMultiplayerRequestCompleted
+void UPlayFabMultiplayerAPI::HelperGetTitleMultiplayerServersQuotaChange(FPlayFabBaseModel response, UObject* customData, bool successful)
+{
+    FPlayFabError error = response.responseError;
+    if (error.hasError && OnFailure.IsBound())
+    {
+        OnFailure.Execute(error, customData);
+    }
+    else if (!error.hasError && OnSuccessGetTitleMultiplayerServersQuotaChange.IsBound())
+    {
+        FMultiplayerGetTitleMultiplayerServersQuotaChangeResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeGetTitleMultiplayerServersQuotaChangeResponseResponse(response.responseData);
+        OnSuccessGetTitleMultiplayerServersQuotaChange.Execute(ResultStruct, mCustomData);
+    }
+    this->RemoveFromRoot();
+}
+
 /** Gets the quotas for a title in relation to multiplayer servers. */
 UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::GetTitleMultiplayerServersQuotas(FMultiplayerGetTitleMultiplayerServersQuotasRequest request,
     FDelegateOnSuccessGetTitleMultiplayerServersQuotas onSuccess,
@@ -2398,7 +2581,7 @@ void UPlayFabMultiplayerAPI::HelperListAssetSummaries(FPlayFabBaseModel response
 }
 
 /** Lists details of all build aliases for a title. Accepts tokens for title and if game client access is enabled, allows game client to request list of builds with player entity token. */
-UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ListBuildAliases(FMultiplayerMultiplayerEmptyRequest request,
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ListBuildAliases(FMultiplayerListBuildAliasesRequest request,
     FDelegateOnSuccessListBuildAliases onSuccess,
     FDelegateOnFailurePlayFabError onFailure,
     UObject* customData)
@@ -2422,6 +2605,12 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ListBuildAliases(FMultiplayerMul
 
     // Serialize all the request properties to json
     if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+    OutRestJsonObj->SetNumberField(TEXT("PageSize"), request.PageSize);
+    if (request.SkipToken.IsEmpty() || request.SkipToken == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("SkipToken"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("SkipToken"), request.SkipToken);
+    }
 
     // Add Request to manager
     manager->SetRequestObject(OutRestJsonObj);
@@ -2439,7 +2628,7 @@ void UPlayFabMultiplayerAPI::HelperListBuildAliases(FPlayFabBaseModel response, 
     }
     else if (!error.hasError && OnSuccessListBuildAliases.IsBound())
     {
-        FMultiplayerListBuildAliasesForTitleResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeListBuildAliasesForTitleResponseResponse(response.responseData);
+        FMultiplayerListBuildAliasesResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeListBuildAliasesResponseResponse(response.responseData);
         OnSuccessListBuildAliases.Execute(ResultStruct, mCustomData);
     }
     this->RemoveFromRoot();
@@ -2821,6 +3010,54 @@ void UPlayFabMultiplayerAPI::HelperListQosServersForTitle(FPlayFabBaseModel resp
     this->RemoveFromRoot();
 }
 
+/** List all server quota change requests for a title. */
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ListTitleMultiplayerServersQuotaChanges(FMultiplayerListTitleMultiplayerServersQuotaChangesRequest request,
+    FDelegateOnSuccessListTitleMultiplayerServersQuotaChanges onSuccess,
+    FDelegateOnFailurePlayFabError onFailure,
+    UObject* customData)
+{
+    // Objects containing request data
+    UPlayFabMultiplayerAPI* manager = NewObject<UPlayFabMultiplayerAPI>();
+    if (manager->IsSafeForRootSet()) manager->AddToRoot();
+    UPlayFabJsonObject* OutRestJsonObj = NewObject<UPlayFabJsonObject>();
+    manager->mCustomData = customData;
+
+    // Assign delegates
+    manager->OnSuccessListTitleMultiplayerServersQuotaChanges = onSuccess;
+    manager->OnFailure = onFailure;
+    manager->OnPlayFabResponse.AddDynamic(manager, &UPlayFabMultiplayerAPI::HelperListTitleMultiplayerServersQuotaChanges);
+
+    // Setup the request
+    manager->SetCallAuthenticationContext(request.AuthenticationContext);
+    manager->PlayFabRequestURL = "/MultiplayerServer/ListTitleMultiplayerServersQuotaChanges";
+    manager->useEntityToken = true;
+
+
+    // Serialize all the request properties to json
+    if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+
+    // Add Request to manager
+    manager->SetRequestObject(OutRestJsonObj);
+
+    return manager;
+}
+
+// Implements FOnPlayFabMultiplayerRequestCompleted
+void UPlayFabMultiplayerAPI::HelperListTitleMultiplayerServersQuotaChanges(FPlayFabBaseModel response, UObject* customData, bool successful)
+{
+    FPlayFabError error = response.responseError;
+    if (error.hasError && OnFailure.IsBound())
+    {
+        OnFailure.Execute(error, customData);
+    }
+    else if (!error.hasError && OnSuccessListTitleMultiplayerServersQuotaChanges.IsBound())
+    {
+        FMultiplayerListTitleMultiplayerServersQuotaChangesResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeListTitleMultiplayerServersQuotaChangesResponseResponse(response.responseData);
+        OnSuccessListTitleMultiplayerServersQuotaChanges.Execute(ResultStruct, mCustomData);
+    }
+    this->RemoveFromRoot();
+}
+
 /** Lists virtual machines for a title. */
 UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ListVirtualMachineSummaries(FMultiplayerListVirtualMachineSummariesRequest request,
     FDelegateOnSuccessListVirtualMachineSummaries onSuccess,
@@ -3037,17 +3274,7 @@ UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::ShutdownMultiplayerServer(FMulti
 
 
     // Serialize all the request properties to json
-    if (request.BuildId.IsEmpty() || request.BuildId == "") {
-        OutRestJsonObj->SetFieldNull(TEXT("BuildId"));
-    } else {
-        OutRestJsonObj->SetStringField(TEXT("BuildId"), request.BuildId);
-    }
     if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
-    if (request.Region.IsEmpty() || request.Region == "") {
-        OutRestJsonObj->SetFieldNull(TEXT("Region"));
-    } else {
-        OutRestJsonObj->SetStringField(TEXT("Region"), request.Region);
-    }
     if (request.SessionId.IsEmpty() || request.SessionId == "") {
         OutRestJsonObj->SetFieldNull(TEXT("SessionId"));
     } else {
@@ -3196,6 +3423,65 @@ void UPlayFabMultiplayerAPI::HelperUpdateBuildAlias(FPlayFabBaseModel response, 
         FMultiplayerBuildAliasDetailsResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeBuildAliasDetailsResponseResponse(response.responseData);
         ResultStruct.Request = RequestJsonObj;
         OnSuccessUpdateBuildAlias.Execute(ResultStruct, mCustomData);
+    }
+    this->RemoveFromRoot();
+}
+
+/** Updates a multiplayer server build's name. */
+UPlayFabMultiplayerAPI* UPlayFabMultiplayerAPI::UpdateBuildName(FMultiplayerUpdateBuildNameRequest request,
+    FDelegateOnSuccessUpdateBuildName onSuccess,
+    FDelegateOnFailurePlayFabError onFailure,
+    UObject* customData)
+{
+    // Objects containing request data
+    UPlayFabMultiplayerAPI* manager = NewObject<UPlayFabMultiplayerAPI>();
+    if (manager->IsSafeForRootSet()) manager->AddToRoot();
+    UPlayFabJsonObject* OutRestJsonObj = NewObject<UPlayFabJsonObject>();
+    manager->mCustomData = customData;
+
+    // Assign delegates
+    manager->OnSuccessUpdateBuildName = onSuccess;
+    manager->OnFailure = onFailure;
+    manager->OnPlayFabResponse.AddDynamic(manager, &UPlayFabMultiplayerAPI::HelperUpdateBuildName);
+
+    // Setup the request
+    manager->SetCallAuthenticationContext(request.AuthenticationContext);
+    manager->PlayFabRequestURL = "/MultiplayerServer/UpdateBuildName";
+    manager->useEntityToken = true;
+
+
+    // Serialize all the request properties to json
+    if (request.BuildId.IsEmpty() || request.BuildId == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("BuildId"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("BuildId"), request.BuildId);
+    }
+    if (request.BuildName.IsEmpty() || request.BuildName == "") {
+        OutRestJsonObj->SetFieldNull(TEXT("BuildName"));
+    } else {
+        OutRestJsonObj->SetStringField(TEXT("BuildName"), request.BuildName);
+    }
+    if (request.CustomTags != nullptr) OutRestJsonObj->SetObjectField(TEXT("CustomTags"), request.CustomTags);
+
+    // Add Request to manager
+    manager->SetRequestObject(OutRestJsonObj);
+
+    return manager;
+}
+
+// Implements FOnPlayFabMultiplayerRequestCompleted
+void UPlayFabMultiplayerAPI::HelperUpdateBuildName(FPlayFabBaseModel response, UObject* customData, bool successful)
+{
+    FPlayFabError error = response.responseError;
+    if (error.hasError && OnFailure.IsBound())
+    {
+        OnFailure.Execute(error, customData);
+    }
+    else if (!error.hasError && OnSuccessUpdateBuildName.IsBound())
+    {
+        FMultiplayerEmptyResponse ResultStruct = UPlayFabMultiplayerModelDecoder::decodeEmptyResponseResponse(response.responseData);
+        ResultStruct.Request = RequestJsonObj;
+        OnSuccessUpdateBuildName.Execute(ResultStruct, mCustomData);
     }
     this->RemoveFromRoot();
 }

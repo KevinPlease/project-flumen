@@ -44,6 +44,15 @@ FAdminDeleteMasterPlayerAccountResult UPlayFabAdminModelDecoder::decodeDeleteMas
     return tempStruct;
 }
 
+FAdminDeleteMembershipSubscriptionResult UPlayFabAdminModelDecoder::decodeDeleteMembershipSubscriptionResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FAdminDeleteMembershipSubscriptionResult tempStruct;
+
+
+    return tempStruct;
+}
+
 FAdminDeletePlayerResult UPlayFabAdminModelDecoder::decodeDeletePlayerResultResponse(UPlayFabJsonObject* response)
 {
     // Temp ustruct
@@ -168,6 +177,15 @@ FAdminSendAccountRecoveryEmailResult UPlayFabAdminModelDecoder::decodeSendAccoun
     return tempStruct;
 }
 
+FAdminSetMembershipOverrideResult UPlayFabAdminModelDecoder::decodeSetMembershipOverrideResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FAdminSetMembershipOverrideResult tempStruct;
+
+
+    return tempStruct;
+}
+
 FAdminUpdateBansResult UPlayFabAdminModelDecoder::decodeUpdateBansResultResponse(UPlayFabJsonObject* response)
 {
     // Temp ustruct
@@ -243,6 +261,7 @@ FAdminGetPolicyResponse UPlayFabAdminModelDecoder::decodeGetPolicyResponseRespon
     UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
 
     tempStruct.PolicyName = !(dataObj->HasField("PolicyName")) ? TEXT("") : dataObj->GetStringField("PolicyName");
+    tempStruct.PolicyVersion = !(dataObj->HasField("PolicyVersion")) ? 0 : int(dataObj->GetNumberField("PolicyVersion"));
     tempStruct.Statements = !(dataObj->HasField("Statements")) ? TArray<UPlayFabJsonObject*>() : dataObj->GetObjectArrayField("Statements");
 
     return tempStruct;
@@ -1101,7 +1120,9 @@ FAdminSetTitleDataResult UPlayFabAdminModelDecoder::decodeSetTitleDataResultResp
 {
     // Temp ustruct
     FAdminSetTitleDataResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
 
+    tempStruct.AzureResourceId = !(dataObj->HasField("AzureResourceId")) ? TEXT("") : dataObj->GetStringField("AzureResourceId");
 
     return tempStruct;
 }

@@ -111,11 +111,14 @@ namespace MultiplayerModels
         AzureRegionSoutheastAsia,
         AzureRegionWestEurope,
         AzureRegionWestUs,
-        AzureRegionChinaEast2,
-        AzureRegionChinaNorth2,
         AzureRegionSouthAfricaNorth,
-        AzureRegionCentralUsEuap,
-        AzureRegionWestCentralUs
+        AzureRegionWestCentralUs,
+        AzureRegionKoreaCentral,
+        AzureRegionFranceCentral,
+        AzureRegionWestUs2,
+        AzureRegionCentralIndia,
+        AzureRegionUaeNorth,
+        AzureRegionUkSouth
     };
 
     PLAYFABCPP_API void writeAzureRegionEnumJSON(AzureRegion enumVal, JsonWriter& writer);
@@ -135,7 +138,13 @@ namespace MultiplayerModels
         AzureVmFamilyEav4,
         AzureVmFamilyEasv4,
         AzureVmFamilyEv4,
-        AzureVmFamilyEsv4
+        AzureVmFamilyEsv4,
+        AzureVmFamilyDsv3,
+        AzureVmFamilyDsv2,
+        AzureVmFamilyNCasT4_v3,
+        AzureVmFamilyDdv4,
+        AzureVmFamilyDdsv4,
+        AzureVmFamilyHBv3
     };
 
     PLAYFABCPP_API void writeAzureVmFamilyEnumJSON(AzureVmFamily enumVal, JsonWriter& writer);
@@ -177,7 +186,38 @@ namespace MultiplayerModels
         AzureVmSizeStandard_D2a_v4,
         AzureVmSizeStandard_D4a_v4,
         AzureVmSizeStandard_D8a_v4,
-        AzureVmSizeStandard_D16a_v4
+        AzureVmSizeStandard_D16a_v4,
+        AzureVmSizeStandard_E2a_v4,
+        AzureVmSizeStandard_E4a_v4,
+        AzureVmSizeStandard_E8a_v4,
+        AzureVmSizeStandard_E16a_v4,
+        AzureVmSizeStandard_E2as_v4,
+        AzureVmSizeStandard_E4as_v4,
+        AzureVmSizeStandard_E8as_v4,
+        AzureVmSizeStandard_E16as_v4,
+        AzureVmSizeStandard_D2s_v3,
+        AzureVmSizeStandard_D4s_v3,
+        AzureVmSizeStandard_D8s_v3,
+        AzureVmSizeStandard_D16s_v3,
+        AzureVmSizeStandard_DS1_v2,
+        AzureVmSizeStandard_DS2_v2,
+        AzureVmSizeStandard_DS3_v2,
+        AzureVmSizeStandard_DS4_v2,
+        AzureVmSizeStandard_DS5_v2,
+        AzureVmSizeStandard_NC4as_T4_v3,
+        AzureVmSizeStandard_D2d_v4,
+        AzureVmSizeStandard_D4d_v4,
+        AzureVmSizeStandard_D8d_v4,
+        AzureVmSizeStandard_D16d_v4,
+        AzureVmSizeStandard_D2ds_v4,
+        AzureVmSizeStandard_D4ds_v4,
+        AzureVmSizeStandard_D8ds_v4,
+        AzureVmSizeStandard_D16ds_v4,
+        AzureVmSizeStandard_HB120_16rs_v3,
+        AzureVmSizeStandard_HB120_32rs_v3,
+        AzureVmSizeStandard_HB120_64rs_v3,
+        AzureVmSizeStandard_HB120_96rs_v3,
+        AzureVmSizeStandard_HB120rs_v3
     };
 
     PLAYFABCPP_API void writeAzureVmSizeEnumJSON(AzureVmSize enumVal, JsonWriter& writer);
@@ -216,19 +256,11 @@ namespace MultiplayerModels
 
         // [optional] Array of build selection criteria.
         TArray<FBuildSelectionCriterion> BuildSelectionCriteria;
-        // The page size on the response.
-        int32 PageSize;
-
-        // [optional] The skip token for the paged response.
-        FString SkipToken;
-
         FBuildAliasDetailsResponse() :
             FPlayFabCppResultCommon(),
             AliasId(),
             AliasName(),
-            BuildSelectionCriteria(),
-            PageSize(0),
-            SkipToken()
+            BuildSelectionCriteria()
             {}
 
         FBuildAliasDetailsResponse(const FBuildAliasDetailsResponse& src) = default;
@@ -445,6 +477,9 @@ namespace MultiplayerModels
         // The maximum number of multiplayer servers for the region.
         int32 MaxServers;
 
+        // [optional] Regional override for the number of multiplayer servers to host on a single VM of the build.
+        Boxed<int32> MultiplayerServerCountPerVm;
+
         // [optional] The build region.
         FString Region;
 
@@ -460,15 +495,20 @@ namespace MultiplayerModels
          */
         FString Status;
 
+        // [optional] Regional override for the VM size the build was created on.
+        Boxed<AzureVmSize> VmSize;
+
         FBuildRegion() :
             FPlayFabCppBaseModel(),
             pfCurrentServerStats(nullptr),
             pfDynamicStandbySettings(nullptr),
             MaxServers(0),
+            MultiplayerServerCountPerVm(),
             Region(),
             pfScheduledStandbySettings(nullptr),
             StandbyServers(0),
-            Status()
+            Status(),
+            VmSize()
             {}
 
         FBuildRegion(const FBuildRegion& src) = default;
@@ -492,6 +532,9 @@ namespace MultiplayerModels
         // The maximum number of multiplayer servers for the region.
         int32 MaxServers;
 
+        // [optional] Regional override for the number of multiplayer servers to host on a single VM of the build.
+        Boxed<int32> MultiplayerServerCountPerVm;
+
         // The build region.
         FString Region;
 
@@ -501,13 +544,18 @@ namespace MultiplayerModels
         // The number of standby multiplayer servers for the region.
         int32 StandbyServers;
 
+        // [optional] Regional override for the VM size the build was created on.
+        Boxed<AzureVmSize> VmSize;
+
         FBuildRegionParams() :
             FPlayFabCppBaseModel(),
             pfDynamicStandbySettings(nullptr),
             MaxServers(0),
+            MultiplayerServerCountPerVm(),
             Region(),
             pfScheduledStandbySettings(nullptr),
-            StandbyServers(0)
+            StandbyServers(0),
+            VmSize()
             {}
 
         FBuildRegionParams(const FBuildRegionParams& src) = default;
@@ -952,6 +1000,37 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FCoreCapacityChange : public PlayFab::FPlayFabCppBaseModel
+    {
+        // New quota core limit for the given vm family/region.
+        int32 NewCoreLimit;
+
+        // Region to change.
+        FString Region;
+
+        // Virtual machine family to change.
+        AzureVmFamily VmFamily;
+
+        FCoreCapacityChange() :
+            FPlayFabCppBaseModel(),
+            NewCoreLimit(0),
+            Region(),
+            VmFamily()
+            {}
+
+        FCoreCapacityChange(const FCoreCapacityChange& src) = default;
+
+        FCoreCapacityChange(const TSharedPtr<FJsonObject>& obj) : FCoreCapacityChange()
+        {
+            readFromValue(obj);
+        }
+
+        ~FCoreCapacityChange();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FCreateBuildAliasRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         // The alias name.
@@ -1038,6 +1117,41 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FMonitoringApplicationConfigurationParams : public PlayFab::FPlayFabCppBaseModel
+    {
+        // Asset which contains the monitoring application files and scripts.
+        FAssetReferenceParams AssetReference;
+
+        // Execution script name, this will be the main executable for the monitoring application.
+        FString ExecutionScriptName;
+
+        // [optional] Installation script name, this will be run before the ExecutionScript.
+        FString InstallationScriptName;
+
+        // [optional] Timespan the monitoring application will be kept alive when running from the start of the VM
+        Boxed<double> OnStartRuntimeInMinutes;
+
+        FMonitoringApplicationConfigurationParams() :
+            FPlayFabCppBaseModel(),
+            AssetReference(),
+            ExecutionScriptName(),
+            InstallationScriptName(),
+            OnStartRuntimeInMinutes()
+            {}
+
+        FMonitoringApplicationConfigurationParams(const FMonitoringApplicationConfigurationParams& src) = default;
+
+        FMonitoringApplicationConfigurationParams(const TSharedPtr<FJsonObject>& obj) : FMonitoringApplicationConfigurationParams()
+        {
+            readFromValue(obj);
+        }
+
+        ~FMonitoringApplicationConfigurationParams();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     enum ProtocolType
     {
         ProtocolTypeTCP,
@@ -1113,6 +1227,9 @@ namespace MultiplayerModels
          * Game Server SDK (GSDK).Constraints: Maximum number of keys: 30, Maximum key length: 50, Maximum value length: 100
          */
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application on the build
+        TSharedPtr<FMonitoringApplicationConfigurationParams> MonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM.
         int32 MultiplayerServerCountPerVm;
 
@@ -1141,6 +1258,7 @@ namespace MultiplayerModels
             GameCertificateReferences(),
             pfLinuxInstrumentationConfiguration(nullptr),
             Metadata(),
+            MonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             Ports(),
             RegionConfigurations(),
@@ -1195,6 +1313,41 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FMonitoringApplicationConfiguration : public PlayFab::FPlayFabCppBaseModel
+    {
+        // Asset which contains the monitoring application files and scripts.
+        FAssetReference pfAssetReference;
+
+        // Execution script name, this will be the main executable for the monitoring application.
+        FString ExecutionScriptName;
+
+        // [optional] Installation script name, this will be run before the ExecutionScript.
+        FString InstallationScriptName;
+
+        // [optional] Timespan the monitoring application will be kept alive when running from the start of the VM
+        Boxed<double> OnStartRuntimeInMinutes;
+
+        FMonitoringApplicationConfiguration() :
+            FPlayFabCppBaseModel(),
+            pfAssetReference(),
+            ExecutionScriptName(),
+            InstallationScriptName(),
+            OnStartRuntimeInMinutes()
+            {}
+
+        FMonitoringApplicationConfiguration(const FMonitoringApplicationConfiguration& src) = default;
+
+        FMonitoringApplicationConfiguration(const TSharedPtr<FJsonObject>& obj) : FMonitoringApplicationConfiguration()
+        {
+            readFromValue(obj);
+        }
+
+        ~FMonitoringApplicationConfiguration();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FCreateBuildWithCustomContainerResponse : public PlayFab::FPlayFabCppResultCommon
     {
         /**
@@ -1230,6 +1383,9 @@ namespace MultiplayerModels
 
         // [optional] The metadata of the build.
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application for the build
+        TSharedPtr<FMonitoringApplicationConfiguration> pfMonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM of the build.
         int32 MultiplayerServerCountPerVm;
 
@@ -1265,6 +1421,7 @@ namespace MultiplayerModels
             GameCertificateReferences(),
             pfLinuxInstrumentationConfiguration(nullptr),
             Metadata(),
+            pfMonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             OsPlatform(),
             Ports(),
@@ -1289,14 +1446,18 @@ namespace MultiplayerModels
 
     struct PLAYFABCPP_API FInstrumentationConfiguration : public PlayFab::FPlayFabCppBaseModel
     {
+        // [optional] Designates whether windows instrumentation configuration will be enabled for this Build
+        Boxed<bool> IsEnabled;
+
         /**
-         * [optional] The list of processes to be monitored on a VM for this build. Providing processes will turn on performance metrics
-         * collection for this build. Process names should not include extensions. If the game server process is: GameServer.exe;
-         * then, ProcessesToMonitor = [ GameServer ]
+         * [optional] This property is deprecated, use IsEnabled. The list of processes to be monitored on a VM for this build. Providing
+         * processes will turn on performance metrics collection for this build. Process names should not include extensions. If
+         * the game server process is: GameServer.exe; then, ProcessesToMonitor = [ GameServer ]
          */
         TArray<FString> ProcessesToMonitor;
         FInstrumentationConfiguration() :
             FPlayFabCppBaseModel(),
+            IsEnabled(),
             ProcessesToMonitor()
             {}
 
@@ -1308,6 +1469,37 @@ namespace MultiplayerModels
         }
 
         ~FInstrumentationConfiguration();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FWindowsCrashDumpConfiguration : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] See https://docs.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps for valid values.
+        Boxed<int32> CustomDumpFlags;
+
+        // [optional] See https://docs.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps for valid values.
+        Boxed<int32> DumpType;
+
+        // Designates whether automatic crash dump capturing will be enabled for this Build.
+        bool IsEnabled;
+
+        FWindowsCrashDumpConfiguration() :
+            FPlayFabCppBaseModel(),
+            CustomDumpFlags(),
+            DumpType(),
+            IsEnabled(false)
+            {}
+
+        FWindowsCrashDumpConfiguration(const FWindowsCrashDumpConfiguration& src) = default;
+
+        FWindowsCrashDumpConfiguration(const TSharedPtr<FJsonObject>& obj) : FWindowsCrashDumpConfiguration()
+        {
+            readFromValue(obj);
+        }
+
+        ~FWindowsCrashDumpConfiguration();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -1347,6 +1539,9 @@ namespace MultiplayerModels
          * Game Server SDK (GSDK).Constraints: Maximum number of keys: 30, Maximum key length: 50, Maximum value length: 100
          */
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application on the build
+        TSharedPtr<FMonitoringApplicationConfigurationParams> MonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM.
         int32 MultiplayerServerCountPerVm;
 
@@ -1366,6 +1561,9 @@ namespace MultiplayerModels
         // [optional] The VM size to create the build on.
         Boxed<AzureVmSize> VmSize;
 
+        // [optional] The crash dump configuration for the build.
+        TSharedPtr<FWindowsCrashDumpConfiguration> pfWindowsCrashDumpConfiguration;
+
         FCreateBuildWithManagedContainerRequest() :
             FPlayFabCppRequestCommon(),
             AreAssetsReadonly(),
@@ -1377,12 +1575,14 @@ namespace MultiplayerModels
             GameWorkingDirectory(),
             pfInstrumentationConfiguration(nullptr),
             Metadata(),
+            MonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             Ports(),
             RegionConfigurations(),
             StartMultiplayerServerCommand(),
             UseStreamingForAssetDownloads(),
-            VmSize()
+            VmSize(),
+            pfWindowsCrashDumpConfiguration(nullptr)
             {}
 
         FCreateBuildWithManagedContainerRequest(const FCreateBuildWithManagedContainerRequest& src) = default;
@@ -1433,6 +1633,9 @@ namespace MultiplayerModels
 
         // [optional] The metadata of the build.
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application for the build
+        TSharedPtr<FMonitoringApplicationConfiguration> pfMonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM of the build.
         int32 MultiplayerServerCountPerVm;
 
@@ -1470,6 +1673,7 @@ namespace MultiplayerModels
             GameWorkingDirectory(),
             pfInstrumentationConfiguration(nullptr),
             Metadata(),
+            pfMonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             OsPlatform(),
             Ports(),
@@ -1530,6 +1734,9 @@ namespace MultiplayerModels
          * Game Server SDK (GSDK).Constraints: Maximum number of keys: 30, Maximum key length: 50, Maximum value length: 100
          */
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application on the build
+        TSharedPtr<FMonitoringApplicationConfigurationParams> MonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM.
         int32 MultiplayerServerCountPerVm;
 
@@ -1566,6 +1773,7 @@ namespace MultiplayerModels
             pfInstrumentationConfiguration(nullptr),
             IsOSPreview(),
             Metadata(),
+            MonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             OsPlatform(),
             Ports(),
@@ -1629,6 +1837,9 @@ namespace MultiplayerModels
 
         // [optional] The metadata of the build.
         TMap<FString, FString> Metadata;
+        // [optional] The configuration for the monitoring application for the build
+        TSharedPtr<FMonitoringApplicationConfiguration> pfMonitoringApplicationConfiguration;
+
         // The number of multiplayer servers to host on a single VM of the build.
         int32 MultiplayerServerCountPerVm;
 
@@ -1670,6 +1881,7 @@ namespace MultiplayerModels
             pfInstrumentationConfiguration(nullptr),
             IsOSPreview(),
             Metadata(),
+            pfMonitoringApplicationConfiguration(nullptr),
             MultiplayerServerCountPerVm(0),
             OsPlatform(),
             Ports(),
@@ -1916,6 +2128,9 @@ namespace MultiplayerModels
 
     struct PLAYFABCPP_API FServerDetails : public PlayFab::FPlayFabCppBaseModel
     {
+        // [optional] The fully qualified domain name of the virtual machine that is hosting this multiplayer server.
+        FString Fqdn;
+
         // [optional] The IPv4 address of the virtual machine that is hosting this multiplayer server.
         FString IPV4Address;
 
@@ -1926,6 +2141,7 @@ namespace MultiplayerModels
 
         FServerDetails() :
             FPlayFabCppBaseModel(),
+            Fqdn(),
             IPV4Address(),
             Ports(),
             Region()
@@ -2032,6 +2248,74 @@ namespace MultiplayerModels
         }
 
         ~FCreateServerMatchmakingTicketRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FCreateTitleMultiplayerServersQuotaChangeRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // [optional] A brief description of the requested changes.
+        FString ChangeDescription;
+
+        // Changes to make to the titles cores quota.
+        TArray<FCoreCapacityChange> Changes;
+        // [optional] Email to be contacted by our team about this request. Only required when a request is not approved.
+        FString ContactEmail;
+
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        // [optional] Additional information about this request that our team can use to better understand the requirements.
+        FString Notes;
+
+        // [optional] When these changes would need to be in effect. Only required when a request is not approved.
+        Boxed<FDateTime> StartDate;
+
+        FCreateTitleMultiplayerServersQuotaChangeRequest() :
+            FPlayFabCppRequestCommon(),
+            ChangeDescription(),
+            Changes(),
+            ContactEmail(),
+            CustomTags(),
+            Notes(),
+            StartDate()
+            {}
+
+        FCreateTitleMultiplayerServersQuotaChangeRequest(const FCreateTitleMultiplayerServersQuotaChangeRequest& src) = default;
+
+        FCreateTitleMultiplayerServersQuotaChangeRequest(const TSharedPtr<FJsonObject>& obj) : FCreateTitleMultiplayerServersQuotaChangeRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FCreateTitleMultiplayerServersQuotaChangeRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FCreateTitleMultiplayerServersQuotaChangeResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] Id of the change request that was created.
+        FString RequestId;
+
+        // Determines if the request was approved or not. When false, our team is reviewing and may respond within 2 business days.
+        bool WasApproved;
+
+        FCreateTitleMultiplayerServersQuotaChangeResponse() :
+            FPlayFabCppResultCommon(),
+            RequestId(),
+            WasApproved(false)
+            {}
+
+        FCreateTitleMultiplayerServersQuotaChangeResponse(const FCreateTitleMultiplayerServersQuotaChangeResponse& src) = default;
+
+        FCreateTitleMultiplayerServersQuotaChangeResponse(const TSharedPtr<FJsonObject>& obj) : FCreateTitleMultiplayerServersQuotaChangeResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FCreateTitleMultiplayerServersQuotaChangeResponse();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -2305,6 +2589,59 @@ namespace MultiplayerModels
         }
 
         ~FEnableMultiplayerServersForTitleResponse();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetAssetDownloadUrlRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        // The asset's file name to get the download URL for.
+        FString FileName;
+
+        FGetAssetDownloadUrlRequest() :
+            FPlayFabCppRequestCommon(),
+            CustomTags(),
+            FileName()
+            {}
+
+        FGetAssetDownloadUrlRequest(const FGetAssetDownloadUrlRequest& src) = default;
+
+        FGetAssetDownloadUrlRequest(const TSharedPtr<FJsonObject>& obj) : FGetAssetDownloadUrlRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetAssetDownloadUrlRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetAssetDownloadUrlResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] The asset's download URL.
+        FString AssetDownloadUrl;
+
+        // [optional] The asset's file name to get the download URL for.
+        FString FileName;
+
+        FGetAssetDownloadUrlResponse() :
+            FPlayFabCppResultCommon(),
+            AssetDownloadUrl(),
+            FileName()
+            {}
+
+        FGetAssetDownloadUrlResponse(const FGetAssetDownloadUrlResponse& src) = default;
+
+        FGetAssetDownloadUrlResponse(const TSharedPtr<FJsonObject>& obj) : FGetAssetDownloadUrlResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetAssetDownloadUrlResponse();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -2790,6 +3127,9 @@ namespace MultiplayerModels
 
     struct PLAYFABCPP_API FGetMultiplayerServerDetailsResponse : public PlayFab::FPlayFabCppResultCommon
     {
+        // [optional] The identity of the build in which the server was allocated.
+        FString BuildId;
+
         // [optional] The connected players in the multiplayer server.
         TArray<FConnectedPlayer> ConnectedPlayers;
         // [optional] The fully qualified domain name of the virtual machine that is hosting this multiplayer server.
@@ -2820,6 +3160,7 @@ namespace MultiplayerModels
 
         FGetMultiplayerServerDetailsResponse() :
             FPlayFabCppResultCommon(),
+            BuildId(),
             ConnectedPlayers(),
             FQDN(),
             IPV4Address(),
@@ -3205,6 +3546,101 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FGetTitleMultiplayerServersQuotaChangeRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        // Id of the change request to get.
+        FString RequestId;
+
+        FGetTitleMultiplayerServersQuotaChangeRequest() :
+            FPlayFabCppRequestCommon(),
+            CustomTags(),
+            RequestId()
+            {}
+
+        FGetTitleMultiplayerServersQuotaChangeRequest(const FGetTitleMultiplayerServersQuotaChangeRequest& src) = default;
+
+        FGetTitleMultiplayerServersQuotaChangeRequest(const TSharedPtr<FJsonObject>& obj) : FGetTitleMultiplayerServersQuotaChangeRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetTitleMultiplayerServersQuotaChangeRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FQuotaChange : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] A brief description of the requested changes.
+        FString ChangeDescription;
+
+        // [optional] Requested changes to make to the titles cores quota.
+        TArray<FCoreCapacityChange> Changes;
+        // Whether or not this request is pending a review.
+        bool IsPendingReview;
+
+        // [optional] Additional information about this request that our team can use to better understand the requirements.
+        FString Notes;
+
+        // [optional] Id of the change request.
+        FString RequestId;
+
+        // [optional] Comments by our team when a request is reviewed.
+        FString ReviewComments;
+
+        // Whether or not this request was approved.
+        bool WasApproved;
+
+        FQuotaChange() :
+            FPlayFabCppBaseModel(),
+            ChangeDescription(),
+            Changes(),
+            IsPendingReview(false),
+            Notes(),
+            RequestId(),
+            ReviewComments(),
+            WasApproved(false)
+            {}
+
+        FQuotaChange(const FQuotaChange& src) = default;
+
+        FQuotaChange(const TSharedPtr<FJsonObject>& obj) : FQuotaChange()
+        {
+            readFromValue(obj);
+        }
+
+        ~FQuotaChange();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetTitleMultiplayerServersQuotaChangeResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] The change request for this title.
+        TSharedPtr<FQuotaChange> Change;
+
+        FGetTitleMultiplayerServersQuotaChangeResponse() :
+            FPlayFabCppResultCommon(),
+            Change(nullptr)
+            {}
+
+        FGetTitleMultiplayerServersQuotaChangeResponse(const FGetTitleMultiplayerServersQuotaChangeResponse& src) = default;
+
+        FGetTitleMultiplayerServersQuotaChangeResponse(const TSharedPtr<FJsonObject>& obj) : FGetTitleMultiplayerServersQuotaChangeResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetTitleMultiplayerServersQuotaChangeResponse();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FGetTitleMultiplayerServersQuotasRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
@@ -3385,23 +3821,61 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
-    struct PLAYFABCPP_API FListBuildAliasesForTitleResponse : public PlayFab::FPlayFabCppResultCommon
+    struct PLAYFABCPP_API FListBuildAliasesRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // [optional] The list of build aliases for the title
-        TArray<FBuildAliasDetailsResponse> BuildAliases;
-        FListBuildAliasesForTitleResponse() :
-            FPlayFabCppResultCommon(),
-            BuildAliases()
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        // [optional] The page size for the request.
+        Boxed<int32> PageSize;
+
+        // [optional] The skip token for the paged request.
+        FString SkipToken;
+
+        FListBuildAliasesRequest() :
+            FPlayFabCppRequestCommon(),
+            CustomTags(),
+            PageSize(),
+            SkipToken()
             {}
 
-        FListBuildAliasesForTitleResponse(const FListBuildAliasesForTitleResponse& src) = default;
+        FListBuildAliasesRequest(const FListBuildAliasesRequest& src) = default;
 
-        FListBuildAliasesForTitleResponse(const TSharedPtr<FJsonObject>& obj) : FListBuildAliasesForTitleResponse()
+        FListBuildAliasesRequest(const TSharedPtr<FJsonObject>& obj) : FListBuildAliasesRequest()
         {
             readFromValue(obj);
         }
 
-        ~FListBuildAliasesForTitleResponse();
+        ~FListBuildAliasesRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FListBuildAliasesResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] The list of build aliases for the title
+        TArray<FBuildAliasDetailsResponse> BuildAliases;
+        // The page size on the response.
+        int32 PageSize;
+
+        // [optional] The skip token for the paged response.
+        FString SkipToken;
+
+        FListBuildAliasesResponse() :
+            FPlayFabCppResultCommon(),
+            BuildAliases(),
+            PageSize(0),
+            SkipToken()
+            {}
+
+        FListBuildAliasesResponse(const FListBuildAliasesResponse& src) = default;
+
+        FListBuildAliasesResponse(const TSharedPtr<FJsonObject>& obj) : FListBuildAliasesResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FListBuildAliasesResponse();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -3991,6 +4465,50 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FListTitleMultiplayerServersQuotaChangesRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        FListTitleMultiplayerServersQuotaChangesRequest() :
+            FPlayFabCppRequestCommon(),
+            CustomTags()
+            {}
+
+        FListTitleMultiplayerServersQuotaChangesRequest(const FListTitleMultiplayerServersQuotaChangesRequest& src) = default;
+
+        FListTitleMultiplayerServersQuotaChangesRequest(const TSharedPtr<FJsonObject>& obj) : FListTitleMultiplayerServersQuotaChangesRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FListTitleMultiplayerServersQuotaChangesRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FListTitleMultiplayerServersQuotaChangesResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] All change requests for this title.
+        TArray<FQuotaChange> Changes;
+        FListTitleMultiplayerServersQuotaChangesResponse() :
+            FPlayFabCppResultCommon(),
+            Changes()
+            {}
+
+        FListTitleMultiplayerServersQuotaChangesResponse(const FListTitleMultiplayerServersQuotaChangesResponse& src) = default;
+
+        FListTitleMultiplayerServersQuotaChangesResponse(const TSharedPtr<FJsonObject>& obj) : FListTitleMultiplayerServersQuotaChangesResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FListTitleMultiplayerServersQuotaChangesResponse();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FListVirtualMachineSummariesRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         // The guid string build ID of the virtual machines to list.
@@ -4090,28 +4608,6 @@ namespace MultiplayerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
-    struct PLAYFABCPP_API FMultiplayerEmptyRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
-        TMap<FString, FString> CustomTags;
-        FMultiplayerEmptyRequest() :
-            FPlayFabCppRequestCommon(),
-            CustomTags()
-            {}
-
-        FMultiplayerEmptyRequest(const FMultiplayerEmptyRequest& src) = default;
-
-        FMultiplayerEmptyRequest(const TSharedPtr<FJsonObject>& obj) : FMultiplayerEmptyRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FMultiplayerEmptyRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
     enum OsPlatform
     {
         OsPlatformWindows,
@@ -4177,6 +4673,9 @@ namespace MultiplayerModels
 
     struct PLAYFABCPP_API FRequestMultiplayerServerResponse : public PlayFab::FPlayFabCppResultCommon
     {
+        // [optional] The identity of the build in which the server was allocated.
+        FString BuildId;
+
         // [optional] The connected players in the multiplayer server.
         TArray<FConnectedPlayer> ConnectedPlayers;
         // [optional] The fully qualified domain name of the virtual machine that is hosting this multiplayer server.
@@ -4207,6 +4706,7 @@ namespace MultiplayerModels
 
         FRequestMultiplayerServerResponse() :
             FPlayFabCppResultCommon(),
+            BuildId(),
             ConnectedPlayers(),
             FQDN(),
             IPV4Address(),
@@ -4297,22 +4797,14 @@ namespace MultiplayerModels
 
     struct PLAYFABCPP_API FShutdownMultiplayerServerRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // The guid string build ID of the multiplayer server to delete.
-        FString BuildId;
-
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
-        // The region of the multiplayer server to shut down.
-        FString Region;
-
         // A guid string session ID of the multiplayer server to shut down.
         FString SessionId;
 
         FShutdownMultiplayerServerRequest() :
             FPlayFabCppRequestCommon(),
-            BuildId(),
             CustomTags(),
-            Region(),
             SessionId()
             {}
 
@@ -4387,6 +4879,36 @@ namespace MultiplayerModels
         }
 
         ~FUpdateBuildAliasRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FUpdateBuildNameRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // The guid string ID of the build we want to update the name of.
+        FString BuildId;
+
+        // The build name.
+        FString BuildName;
+
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
+        FUpdateBuildNameRequest() :
+            FPlayFabCppRequestCommon(),
+            BuildId(),
+            BuildName(),
+            CustomTags()
+            {}
+
+        FUpdateBuildNameRequest(const FUpdateBuildNameRequest& src) = default;
+
+        FUpdateBuildNameRequest(const TSharedPtr<FJsonObject>& obj) : FUpdateBuildNameRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FUpdateBuildNameRequest();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;

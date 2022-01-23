@@ -97,6 +97,33 @@ public:
         FString TitleIds;
 };
 
+/** This API lets developers delete a membership subscription. */
+USTRUCT(BlueprintType)
+struct PLAYFAB_API FAdminDeleteMembershipSubscriptionRequest : public FPlayFabRequestCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    /** The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        UPlayFabJsonObject* CustomTags = nullptr;
+    /** Id of the membership to apply the override expiration date to. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString MembershipId;
+    /** Unique PlayFab assigned ID of the user on whom the operation will be performed. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString PlayFabId;
+    /** Id of the subscription that should be deleted from the membership. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString SubscriptionId;
+};
+
+USTRUCT(BlueprintType)
+struct PLAYFAB_API FAdminDeleteMembershipSubscriptionResult : public FPlayFabResultCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+};
+
 /**
  * Deletes all data associated with the player, including statistics, custom data, inventory, purchases, virtual currency
  * balances, characters and shared group memberships. Removes the player from all leaderboards and player search indexes.
@@ -423,6 +450,33 @@ struct PLAYFAB_API FAdminSendAccountRecoveryEmailResult : public FPlayFabResultC
 public:
 };
 
+/** This API lets developers set overrides for membership expirations, independent of any subscriptions setting it. */
+USTRUCT(BlueprintType)
+struct PLAYFAB_API FAdminSetMembershipOverrideRequest : public FPlayFabRequestCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    /** The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        UPlayFabJsonObject* CustomTags = nullptr;
+    /** Expiration time for the membership in DateTime format, will override any subscription expirations. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString ExpirationTime;
+    /** Id of the membership to apply the override expiration date to. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString MembershipId;
+    /** Unique PlayFab assigned ID of the user on whom the operation will be performed. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Account Management Models")
+        FString PlayFabId;
+};
+
+USTRUCT(BlueprintType)
+struct PLAYFAB_API FAdminSetMembershipOverrideResult : public FPlayFabResultCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+};
+
 /**
  * For each ban, only updates the values that are set. Leave any value to null for no change. If a ban could not be found,
  * the rest are still applied. Returns information about applied updates only.
@@ -615,6 +669,9 @@ public:
     /** The name of the policy read. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
         FString PolicyName;
+    /** Policy version. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
+        int32 PolicyVersion = 0;
     /** The statements in the requested policy. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
         TArray<UPlayFabJsonObject*> Statements;
@@ -717,7 +774,10 @@ public:
 /**
  * Updates permissions for your title. Policies affect what is allowed to happen on your title. Your policy is a collection
  * of statements that, together, govern particular area for your title. Today, the only allowed policy is called
- * 'ApiPolicy' and it governs what api calls are allowed.
+ * 'ApiPolicy' and it governs what API calls are allowed. To verify that you have the latest version always download the
+ * current policy from GetPolicy before uploading a new policy. PlayFab updates the base policy periodically and will
+ * automatically apply it to the uploaded policy. Overwriting the combined policy blindly may result in unexpected API
+ * errors.
  */
 USTRUCT(BlueprintType)
 struct PLAYFAB_API FAdminUpdatePolicyRequest : public FPlayFabRequestCommon
@@ -730,6 +790,9 @@ public:
     /** The name of the policy being updated. Only supported name is 'ApiPolicy' */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
         FString PolicyName;
+    /** Version of the policy to update. Must be the latest (as returned by GetPolicy). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
+        int32 PolicyVersion = 0;
     /** The new statements to include in the policy. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Authentication Models")
         TArray<UPlayFabJsonObject*> Statements;
@@ -1745,7 +1808,8 @@ public:
 /**
  * All items currently in the user inventory will be returned, irrespective of how they were acquired (via purchasing,
  * grants, coupons, etc.). Items that are expired, fully consumed, or are no longer valid are not considered to be in the
- * user's current inventory, and so will not be not included.
+ * user's current inventory, and so will not be not included. There can be a delay of up to a half a second for inventory
+ * changes to be reflected in the GetUserInventory API response.
  */
 USTRUCT(BlueprintType)
 struct PLAYFAB_API FAdminGetUserInventoryRequest : public FPlayFabRequestCommon
@@ -3028,12 +3092,21 @@ struct PLAYFAB_API FAdminSetTitleDataRequest : public FPlayFabRequestCommon
 {
     GENERATED_USTRUCT_BODY()
 public:
+    /** Id of azure resource */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
+        FString AzureResourceId;
+    /** The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
+        UPlayFabJsonObject* CustomTags = nullptr;
     /**
      * key we want to set a value on (note, this is additive - will only replace an existing key's value if they are the same
      * name.) Keys are trimmed of whitespace. Keys may not begin with the '!' character.
      */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
         FString Key;
+    /** System Data of the Azure Resource */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
+        UPlayFabJsonObject* SystemData = nullptr;
     /** new value to set. Set to null to remove a value */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
         FString Value;
@@ -3044,6 +3117,9 @@ struct PLAYFAB_API FAdminSetTitleDataResult : public FPlayFabResultCommon
 {
     GENERATED_USTRUCT_BODY()
 public:
+    /** Id of azure resource */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
+        FString AzureResourceId;
 };
 
 /**
@@ -3089,10 +3165,7 @@ public:
     /** for APNS, this is the PlatformPrincipal (SSL Certificate) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
         FString Key;
-    /**
-     * name of the application sending the message (application names must be made up of only uppercase and lowercase ASCII
-     * letters, numbers, underscores, hyphens, and periods, and must be between 1 and 256 characters long)
-     */
+    /** This field is deprecated and any usage of this will cause the API to fail. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Admin | Title-Wide Data Management Models")
         FString Name;
     /**

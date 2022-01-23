@@ -1594,6 +1594,99 @@ AdminModels::AuthTokenType PlayFab::AdminModels::readAuthTokenTypeFromValue(cons
     return AuthTokenTypeEmail; // Basically critical fail
 }
 
+PlayFab::AdminModels::FAzureResourceSystemData::~FAzureResourceSystemData()
+{
+
+}
+
+void PlayFab::AdminModels::FAzureResourceSystemData::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (CreatedAt.notNull())
+    {
+        writer->WriteIdentifierPrefix(TEXT("CreatedAt"));
+        writeDatetime(CreatedAt, writer);
+    }
+
+    if (CreatedBy.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("CreatedBy"));
+        writer->WriteValue(CreatedBy);
+    }
+
+    if (CreatedByType.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("CreatedByType"));
+        writer->WriteValue(CreatedByType);
+    }
+
+    if (LastModifiedAt.notNull())
+    {
+        writer->WriteIdentifierPrefix(TEXT("LastModifiedAt"));
+        writeDatetime(LastModifiedAt, writer);
+    }
+
+    if (LastModifiedBy.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("LastModifiedBy"));
+        writer->WriteValue(LastModifiedBy);
+    }
+
+    if (LastModifiedByType.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("LastModifiedByType"));
+        writer->WriteValue(LastModifiedByType);
+    }
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::AdminModels::FAzureResourceSystemData::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonValue> CreatedAtValue = obj->TryGetField(TEXT("CreatedAt"));
+    if (CreatedAtValue.IsValid())
+        CreatedAt = readDatetime(CreatedAtValue);
+
+
+    const TSharedPtr<FJsonValue> CreatedByValue = obj->TryGetField(TEXT("CreatedBy"));
+    if (CreatedByValue.IsValid() && !CreatedByValue->IsNull())
+    {
+        FString TmpValue;
+        if (CreatedByValue->TryGetString(TmpValue)) { CreatedBy = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> CreatedByTypeValue = obj->TryGetField(TEXT("CreatedByType"));
+    if (CreatedByTypeValue.IsValid() && !CreatedByTypeValue->IsNull())
+    {
+        FString TmpValue;
+        if (CreatedByTypeValue->TryGetString(TmpValue)) { CreatedByType = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> LastModifiedAtValue = obj->TryGetField(TEXT("LastModifiedAt"));
+    if (LastModifiedAtValue.IsValid())
+        LastModifiedAt = readDatetime(LastModifiedAtValue);
+
+
+    const TSharedPtr<FJsonValue> LastModifiedByValue = obj->TryGetField(TEXT("LastModifiedBy"));
+    if (LastModifiedByValue.IsValid() && !LastModifiedByValue->IsNull())
+    {
+        FString TmpValue;
+        if (LastModifiedByValue->TryGetString(TmpValue)) { LastModifiedBy = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> LastModifiedByTypeValue = obj->TryGetField(TEXT("LastModifiedByType"));
+    if (LastModifiedByTypeValue.IsValid() && !LastModifiedByTypeValue->IsNull())
+    {
+        FString TmpValue;
+        if (LastModifiedByTypeValue->TryGetString(TmpValue)) { LastModifiedByType = TmpValue; }
+    }
+
+    return HasSucceeded;
+}
+
 PlayFab::AdminModels::FBanInfo::~FBanInfo()
 {
 
@@ -1628,12 +1721,6 @@ void PlayFab::AdminModels::FBanInfo::writeJSON(JsonWriter& writer) const
     {
         writer->WriteIdentifierPrefix(TEXT("IPAddress"));
         writer->WriteValue(IPAddress);
-    }
-
-    if (MACAddress.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("MACAddress"));
-        writer->WriteValue(MACAddress);
     }
 
     if (PlayFabId.IsEmpty() == false)
@@ -1684,13 +1771,6 @@ bool PlayFab::AdminModels::FBanInfo::readFromValue(const TSharedPtr<FJsonObject>
     {
         FString TmpValue;
         if (IPAddressValue->TryGetString(TmpValue)) { IPAddress = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> MACAddressValue = obj->TryGetField(TEXT("MACAddress"));
-    if (MACAddressValue.IsValid() && !MACAddressValue->IsNull())
-    {
-        FString TmpValue;
-        if (MACAddressValue->TryGetString(TmpValue)) { MACAddress = TmpValue; }
     }
 
     const TSharedPtr<FJsonValue> PlayFabIdValue = obj->TryGetField(TEXT("PlayFabId"));
@@ -3188,7 +3268,7 @@ void PlayFab::AdminModels::FContentInfo::writeJSON(JsonWriter& writer) const
     writeDatetime(LastModified, writer);
 
     writer->WriteIdentifierPrefix(TEXT("Size"));
-    writer->WriteValue(static_cast<int64>(Size));
+    writer->WriteValue(Size);
 
     writer->WriteObjectEnd();
 }
@@ -3212,7 +3292,7 @@ bool PlayFab::AdminModels::FContentInfo::readFromValue(const TSharedPtr<FJsonObj
     const TSharedPtr<FJsonValue> SizeValue = obj->TryGetField(TEXT("Size"));
     if (SizeValue.IsValid() && !SizeValue->IsNull())
     {
-        uint32 TmpValue;
+        double TmpValue;
         if (SizeValue->TryGetNumber(TmpValue)) { Size = TmpValue; }
     }
 
@@ -5387,12 +5467,6 @@ void PlayFab::AdminModels::FLinkedUserAccountSegmentFilter::writeJSON(JsonWriter
 {
     writer->WriteObjectStart();
 
-    if (Comparison.notNull())
-    {
-        writer->WriteIdentifierPrefix(TEXT("Comparison"));
-        writeSegmentFilterComparisonEnumJSON(Comparison, writer);
-    }
-
     if (LoginProvider.notNull())
     {
         writer->WriteIdentifierPrefix(TEXT("LoginProvider"));
@@ -5405,8 +5479,6 @@ void PlayFab::AdminModels::FLinkedUserAccountSegmentFilter::writeJSON(JsonWriter
 bool PlayFab::AdminModels::FLinkedUserAccountSegmentFilter::readFromValue(const TSharedPtr<FJsonObject>& obj)
 {
     bool HasSucceeded = true;
-
-    Comparison = readSegmentFilterComparisonFromValue(obj->TryGetField(TEXT("Comparison")));
 
     LoginProvider = readSegmentLoginIdentityProviderFromValue(obj->TryGetField(TEXT("LoginProvider")));
 
@@ -6980,6 +7052,12 @@ void PlayFab::AdminModels::FSegmentModel::writeJSON(JsonWriter& writer) const
 {
     writer->WriteObjectStart();
 
+    if (AzureResourceId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("AzureResourceId"));
+        writer->WriteValue(AzureResourceId);
+    }
+
     if (Description.IsEmpty() == false)
     {
         writer->WriteIdentifierPrefix(TEXT("Description"));
@@ -7034,6 +7112,13 @@ void PlayFab::AdminModels::FSegmentModel::writeJSON(JsonWriter& writer) const
 bool PlayFab::AdminModels::FSegmentModel::readFromValue(const TSharedPtr<FJsonObject>& obj)
 {
     bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonValue> AzureResourceIdValue = obj->TryGetField(TEXT("AzureResourceId"));
+    if (AzureResourceIdValue.IsValid() && !AzureResourceIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (AzureResourceIdValue->TryGetString(TmpValue)) { AzureResourceId = TmpValue; }
+    }
 
     const TSharedPtr<FJsonValue> DescriptionValue = obj->TryGetField(TEXT("Description"));
     if (DescriptionValue.IsValid() && !DescriptionValue->IsNull())
@@ -7673,6 +7758,115 @@ bool PlayFab::AdminModels::FDeleteMasterPlayerAccountResult::readFromValue(const
     }
 
     obj->TryGetStringArrayField(TEXT("TitleIds"), TitleIds);
+
+    return HasSucceeded;
+}
+
+PlayFab::AdminModels::FDeleteMembershipSubscriptionRequest::~FDeleteMembershipSubscriptionRequest()
+{
+
+}
+
+void PlayFab::AdminModels::FDeleteMembershipSubscriptionRequest::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (CustomTags.Num() != 0)
+    {
+        writer->WriteObjectStart(TEXT("CustomTags"));
+        for (TMap<FString, FString>::TConstIterator It(CustomTags); It; ++It)
+        {
+            writer->WriteIdentifierPrefix((*It).Key);
+            writer->WriteValue((*It).Value);
+        }
+        writer->WriteObjectEnd();
+    }
+
+    if (!MembershipId.IsEmpty() == false)
+    {
+        UE_LOG(LogTemp, Error, TEXT("This field is required: DeleteMembershipSubscriptionRequest::MembershipId, PlayFab calls may not work if it remains empty."));
+    }
+    else
+    {
+        writer->WriteIdentifierPrefix(TEXT("MembershipId"));
+        writer->WriteValue(MembershipId);
+    }
+
+    if (!PlayFabId.IsEmpty() == false)
+    {
+        UE_LOG(LogTemp, Error, TEXT("This field is required: DeleteMembershipSubscriptionRequest::PlayFabId, PlayFab calls may not work if it remains empty."));
+    }
+    else
+    {
+        writer->WriteIdentifierPrefix(TEXT("PlayFabId"));
+        writer->WriteValue(PlayFabId);
+    }
+
+    if (!SubscriptionId.IsEmpty() == false)
+    {
+        UE_LOG(LogTemp, Error, TEXT("This field is required: DeleteMembershipSubscriptionRequest::SubscriptionId, PlayFab calls may not work if it remains empty."));
+    }
+    else
+    {
+        writer->WriteIdentifierPrefix(TEXT("SubscriptionId"));
+        writer->WriteValue(SubscriptionId);
+    }
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::AdminModels::FDeleteMembershipSubscriptionRequest::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonObject>* CustomTagsObject;
+    if (obj->TryGetObjectField(TEXT("CustomTags"), CustomTagsObject))
+    {
+        for (TMap<FString, TSharedPtr<FJsonValue>>::TConstIterator It((*CustomTagsObject)->Values); It; ++It)
+        {
+            CustomTags.Add(It.Key(), It.Value()->AsString());
+        }
+    }
+
+    const TSharedPtr<FJsonValue> MembershipIdValue = obj->TryGetField(TEXT("MembershipId"));
+    if (MembershipIdValue.IsValid() && !MembershipIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (MembershipIdValue->TryGetString(TmpValue)) { MembershipId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PlayFabIdValue = obj->TryGetField(TEXT("PlayFabId"));
+    if (PlayFabIdValue.IsValid() && !PlayFabIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (PlayFabIdValue->TryGetString(TmpValue)) { PlayFabId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> SubscriptionIdValue = obj->TryGetField(TEXT("SubscriptionId"));
+    if (SubscriptionIdValue.IsValid() && !SubscriptionIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (SubscriptionIdValue->TryGetString(TmpValue)) { SubscriptionId = TmpValue; }
+    }
+
+    return HasSucceeded;
+}
+
+PlayFab::AdminModels::FDeleteMembershipSubscriptionResult::~FDeleteMembershipSubscriptionResult()
+{
+
+}
+
+void PlayFab::AdminModels::FDeleteMembershipSubscriptionResult::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::AdminModels::FDeleteMembershipSubscriptionResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
 
     return HasSucceeded;
 }
@@ -12187,6 +12381,9 @@ void PlayFab::AdminModels::FGetPolicyResponse::writeJSON(JsonWriter& writer) con
         writer->WriteValue(PolicyName);
     }
 
+    writer->WriteIdentifierPrefix(TEXT("PolicyVersion"));
+    writer->WriteValue(PolicyVersion);
+
     if (Statements.Num() != 0)
     {
         writer->WriteArrayStart(TEXT("Statements"));
@@ -12208,6 +12405,13 @@ bool PlayFab::AdminModels::FGetPolicyResponse::readFromValue(const TSharedPtr<FJ
     {
         FString TmpValue;
         if (PolicyNameValue->TryGetString(TmpValue)) { PolicyName = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PolicyVersionValue = obj->TryGetField(TEXT("PolicyVersion"));
+    if (PolicyVersionValue.IsValid() && !PolicyVersionValue->IsNull())
+    {
+        int32 TmpValue;
+        if (PolicyVersionValue->TryGetNumber(TmpValue)) { PolicyVersion = TmpValue; }
     }
 
     const TArray<TSharedPtr<FJsonValue>>&StatementsArray = FPlayFabJsonHelpers::ReadArray(obj, TEXT("Statements"));
@@ -16078,7 +16282,6 @@ void PlayFab::AdminModels::writeUserOriginationEnumJSON(UserOrigination enumVal,
     case UserOriginationXboxLive: writer->WriteValue(TEXT("XboxLive")); break;
     case UserOriginationParse: writer->WriteValue(TEXT("Parse")); break;
     case UserOriginationTwitch: writer->WriteValue(TEXT("Twitch")); break;
-    case UserOriginationWindowsHello: writer->WriteValue(TEXT("WindowsHello")); break;
     case UserOriginationServerCustomId: writer->WriteValue(TEXT("ServerCustomId")); break;
     case UserOriginationNintendoSwitchDeviceId: writer->WriteValue(TEXT("NintendoSwitchDeviceId")); break;
     case UserOriginationFacebookInstantGamesId: writer->WriteValue(TEXT("FacebookInstantGamesId")); break;
@@ -16116,7 +16319,6 @@ AdminModels::UserOrigination PlayFab::AdminModels::readUserOriginationFromValue(
         _UserOriginationMap.Add(TEXT("XboxLive"), UserOriginationXboxLive);
         _UserOriginationMap.Add(TEXT("Parse"), UserOriginationParse);
         _UserOriginationMap.Add(TEXT("Twitch"), UserOriginationTwitch);
-        _UserOriginationMap.Add(TEXT("WindowsHello"), UserOriginationWindowsHello);
         _UserOriginationMap.Add(TEXT("ServerCustomId"), UserOriginationServerCustomId);
         _UserOriginationMap.Add(TEXT("NintendoSwitchDeviceId"), UserOriginationNintendoSwitchDeviceId);
         _UserOriginationMap.Add(TEXT("FacebookInstantGamesId"), UserOriginationFacebookInstantGamesId);
@@ -16290,51 +16492,6 @@ bool PlayFab::AdminModels::FUserTwitchInfo::readFromValue(const TSharedPtr<FJson
     return HasSucceeded;
 }
 
-PlayFab::AdminModels::FUserWindowsHelloInfo::~FUserWindowsHelloInfo()
-{
-
-}
-
-void PlayFab::AdminModels::FUserWindowsHelloInfo::writeJSON(JsonWriter& writer) const
-{
-    writer->WriteObjectStart();
-
-    if (WindowsHelloDeviceName.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("WindowsHelloDeviceName"));
-        writer->WriteValue(WindowsHelloDeviceName);
-    }
-
-    if (WindowsHelloPublicKeyHash.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("WindowsHelloPublicKeyHash"));
-        writer->WriteValue(WindowsHelloPublicKeyHash);
-    }
-
-    writer->WriteObjectEnd();
-}
-
-bool PlayFab::AdminModels::FUserWindowsHelloInfo::readFromValue(const TSharedPtr<FJsonObject>& obj)
-{
-    bool HasSucceeded = true;
-
-    const TSharedPtr<FJsonValue> WindowsHelloDeviceNameValue = obj->TryGetField(TEXT("WindowsHelloDeviceName"));
-    if (WindowsHelloDeviceNameValue.IsValid() && !WindowsHelloDeviceNameValue->IsNull())
-    {
-        FString TmpValue;
-        if (WindowsHelloDeviceNameValue->TryGetString(TmpValue)) { WindowsHelloDeviceName = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> WindowsHelloPublicKeyHashValue = obj->TryGetField(TEXT("WindowsHelloPublicKeyHash"));
-    if (WindowsHelloPublicKeyHashValue.IsValid() && !WindowsHelloPublicKeyHashValue->IsNull())
-    {
-        FString TmpValue;
-        if (WindowsHelloPublicKeyHashValue->TryGetString(TmpValue)) { WindowsHelloPublicKeyHash = TmpValue; }
-    }
-
-    return HasSucceeded;
-}
-
 PlayFab::AdminModels::FUserXboxInfo::~FUserXboxInfo()
 {
 
@@ -16385,7 +16542,6 @@ PlayFab::AdminModels::FUserAccountInfo::~FUserAccountInfo()
     //if (SteamInfo != nullptr) delete SteamInfo;
     //if (TitleInfo != nullptr) delete TitleInfo;
     //if (TwitchInfo != nullptr) delete TwitchInfo;
-    //if (WindowsHelloInfo != nullptr) delete WindowsHelloInfo;
     //if (XboxInfo != nullptr) delete XboxInfo;
 
 }
@@ -16512,12 +16668,6 @@ void PlayFab::AdminModels::FUserAccountInfo::writeJSON(JsonWriter& writer) const
     {
         writer->WriteIdentifierPrefix(TEXT("Username"));
         writer->WriteValue(Username);
-    }
-
-    if (WindowsHelloInfo.IsValid())
-    {
-        writer->WriteIdentifierPrefix(TEXT("WindowsHelloInfo"));
-        WindowsHelloInfo->writeJSON(writer);
     }
 
     if (XboxInfo.IsValid())
@@ -16654,12 +16804,6 @@ bool PlayFab::AdminModels::FUserAccountInfo::readFromValue(const TSharedPtr<FJso
     {
         FString TmpValue;
         if (UsernameValue->TryGetString(TmpValue)) { Username = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> WindowsHelloInfoValue = obj->TryGetField(TEXT("WindowsHelloInfo"));
-    if (WindowsHelloInfoValue.IsValid() && !WindowsHelloInfoValue->IsNull())
-    {
-        WindowsHelloInfo = MakeShareable(new FUserWindowsHelloInfo(WindowsHelloInfoValue->AsObject()));
     }
 
     const TSharedPtr<FJsonValue> XboxInfoValue = obj->TryGetField(TEXT("XboxInfo"));
@@ -18455,6 +18599,106 @@ bool PlayFab::AdminModels::FSendAccountRecoveryEmailResult::readFromValue(const 
     return HasSucceeded;
 }
 
+PlayFab::AdminModels::FSetMembershipOverrideRequest::~FSetMembershipOverrideRequest()
+{
+
+}
+
+void PlayFab::AdminModels::FSetMembershipOverrideRequest::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (CustomTags.Num() != 0)
+    {
+        writer->WriteObjectStart(TEXT("CustomTags"));
+        for (TMap<FString, FString>::TConstIterator It(CustomTags); It; ++It)
+        {
+            writer->WriteIdentifierPrefix((*It).Key);
+            writer->WriteValue((*It).Value);
+        }
+        writer->WriteObjectEnd();
+    }
+
+    writer->WriteIdentifierPrefix(TEXT("ExpirationTime"));
+    writeDatetime(ExpirationTime, writer);
+
+    if (!MembershipId.IsEmpty() == false)
+    {
+        UE_LOG(LogTemp, Error, TEXT("This field is required: SetMembershipOverrideRequest::MembershipId, PlayFab calls may not work if it remains empty."));
+    }
+    else
+    {
+        writer->WriteIdentifierPrefix(TEXT("MembershipId"));
+        writer->WriteValue(MembershipId);
+    }
+
+    if (!PlayFabId.IsEmpty() == false)
+    {
+        UE_LOG(LogTemp, Error, TEXT("This field is required: SetMembershipOverrideRequest::PlayFabId, PlayFab calls may not work if it remains empty."));
+    }
+    else
+    {
+        writer->WriteIdentifierPrefix(TEXT("PlayFabId"));
+        writer->WriteValue(PlayFabId);
+    }
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::AdminModels::FSetMembershipOverrideRequest::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonObject>* CustomTagsObject;
+    if (obj->TryGetObjectField(TEXT("CustomTags"), CustomTagsObject))
+    {
+        for (TMap<FString, TSharedPtr<FJsonValue>>::TConstIterator It((*CustomTagsObject)->Values); It; ++It)
+        {
+            CustomTags.Add(It.Key(), It.Value()->AsString());
+        }
+    }
+
+    const TSharedPtr<FJsonValue> ExpirationTimeValue = obj->TryGetField(TEXT("ExpirationTime"));
+    if (ExpirationTimeValue.IsValid())
+        ExpirationTime = readDatetime(ExpirationTimeValue);
+
+
+    const TSharedPtr<FJsonValue> MembershipIdValue = obj->TryGetField(TEXT("MembershipId"));
+    if (MembershipIdValue.IsValid() && !MembershipIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (MembershipIdValue->TryGetString(TmpValue)) { MembershipId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PlayFabIdValue = obj->TryGetField(TEXT("PlayFabId"));
+    if (PlayFabIdValue.IsValid() && !PlayFabIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (PlayFabIdValue->TryGetString(TmpValue)) { PlayFabId = TmpValue; }
+    }
+
+    return HasSucceeded;
+}
+
+PlayFab::AdminModels::FSetMembershipOverrideResult::~FSetMembershipOverrideResult()
+{
+
+}
+
+void PlayFab::AdminModels::FSetMembershipOverrideResult::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::AdminModels::FSetMembershipOverrideResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    return HasSucceeded;
+}
+
 PlayFab::AdminModels::FSetPlayerSecretRequest::~FSetPlayerSecretRequest()
 {
 
@@ -18781,12 +19025,30 @@ bool PlayFab::AdminModels::FSetTitleDataAndOverridesResult::readFromValue(const 
 
 PlayFab::AdminModels::FSetTitleDataRequest::~FSetTitleDataRequest()
 {
+    //if (SystemData != nullptr) delete SystemData;
 
 }
 
 void PlayFab::AdminModels::FSetTitleDataRequest::writeJSON(JsonWriter& writer) const
 {
     writer->WriteObjectStart();
+
+    if (AzureResourceId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("AzureResourceId"));
+        writer->WriteValue(AzureResourceId);
+    }
+
+    if (CustomTags.Num() != 0)
+    {
+        writer->WriteObjectStart(TEXT("CustomTags"));
+        for (TMap<FString, FString>::TConstIterator It(CustomTags); It; ++It)
+        {
+            writer->WriteIdentifierPrefix((*It).Key);
+            writer->WriteValue((*It).Value);
+        }
+        writer->WriteObjectEnd();
+    }
 
     if (!Key.IsEmpty() == false)
     {
@@ -18796,6 +19058,18 @@ void PlayFab::AdminModels::FSetTitleDataRequest::writeJSON(JsonWriter& writer) c
     {
         writer->WriteIdentifierPrefix(TEXT("Key"));
         writer->WriteValue(Key);
+    }
+
+    if (SystemData.IsValid())
+    {
+        writer->WriteIdentifierPrefix(TEXT("SystemData"));
+        SystemData->writeJSON(writer);
+    }
+
+    if (TitleId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("TitleId"));
+        writer->WriteValue(TitleId);
     }
 
     if (Value.IsEmpty() == false)
@@ -18811,11 +19085,40 @@ bool PlayFab::AdminModels::FSetTitleDataRequest::readFromValue(const TSharedPtr<
 {
     bool HasSucceeded = true;
 
+    const TSharedPtr<FJsonValue> AzureResourceIdValue = obj->TryGetField(TEXT("AzureResourceId"));
+    if (AzureResourceIdValue.IsValid() && !AzureResourceIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (AzureResourceIdValue->TryGetString(TmpValue)) { AzureResourceId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonObject>* CustomTagsObject;
+    if (obj->TryGetObjectField(TEXT("CustomTags"), CustomTagsObject))
+    {
+        for (TMap<FString, TSharedPtr<FJsonValue>>::TConstIterator It((*CustomTagsObject)->Values); It; ++It)
+        {
+            CustomTags.Add(It.Key(), It.Value()->AsString());
+        }
+    }
+
     const TSharedPtr<FJsonValue> KeyValue = obj->TryGetField(TEXT("Key"));
     if (KeyValue.IsValid() && !KeyValue->IsNull())
     {
         FString TmpValue;
         if (KeyValue->TryGetString(TmpValue)) { Key = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> SystemDataValue = obj->TryGetField(TEXT("SystemData"));
+    if (SystemDataValue.IsValid() && !SystemDataValue->IsNull())
+    {
+        SystemData = MakeShareable(new FAzureResourceSystemData(SystemDataValue->AsObject()));
+    }
+
+    const TSharedPtr<FJsonValue> TitleIdValue = obj->TryGetField(TEXT("TitleId"));
+    if (TitleIdValue.IsValid() && !TitleIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (TitleIdValue->TryGetString(TmpValue)) { TitleId = TmpValue; }
     }
 
     const TSharedPtr<FJsonValue> ValueValue = obj->TryGetField(TEXT("Value"));
@@ -18837,12 +19140,25 @@ void PlayFab::AdminModels::FSetTitleDataResult::writeJSON(JsonWriter& writer) co
 {
     writer->WriteObjectStart();
 
+    if (AzureResourceId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("AzureResourceId"));
+        writer->WriteValue(AzureResourceId);
+    }
+
     writer->WriteObjectEnd();
 }
 
 bool PlayFab::AdminModels::FSetTitleDataResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
 {
     bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonValue> AzureResourceIdValue = obj->TryGetField(TEXT("AzureResourceId"));
+    if (AzureResourceIdValue.IsValid() && !AzureResourceIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (AzureResourceIdValue->TryGetString(TmpValue)) { AzureResourceId = TmpValue; }
+    }
 
     return HasSucceeded;
 }
@@ -18872,11 +19188,7 @@ void PlayFab::AdminModels::FSetupPushNotificationRequest::writeJSON(JsonWriter& 
         writer->WriteValue(Key);
     }
 
-    if (!Name.IsEmpty() == false)
-    {
-        UE_LOG(LogTemp, Error, TEXT("This field is required: SetupPushNotificationRequest::Name, PlayFab calls may not work if it remains empty."));
-    }
-    else
+    if (Name.IsEmpty() == false)
     {
         writer->WriteIdentifierPrefix(TEXT("Name"));
         writer->WriteValue(Name);
@@ -19750,6 +20062,9 @@ void PlayFab::AdminModels::FUpdatePolicyRequest::writeJSON(JsonWriter& writer) c
         writer->WriteValue(PolicyName);
     }
 
+    writer->WriteIdentifierPrefix(TEXT("PolicyVersion"));
+    writer->WriteValue(PolicyVersion);
+
     writer->WriteArrayStart(TEXT("Statements"));
     for (const FPermissionStatement& item : Statements)
         item.writeJSON(writer);
@@ -19775,6 +20090,13 @@ bool PlayFab::AdminModels::FUpdatePolicyRequest::readFromValue(const TSharedPtr<
     {
         FString TmpValue;
         if (PolicyNameValue->TryGetString(TmpValue)) { PolicyName = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PolicyVersionValue = obj->TryGetField(TEXT("PolicyVersion"));
+    if (PolicyVersionValue.IsValid() && !PolicyVersionValue->IsNull())
+    {
+        int32 TmpValue;
+        if (PolicyVersionValue->TryGetNumber(TmpValue)) { PolicyVersion = TmpValue; }
     }
 
     const TArray<TSharedPtr<FJsonValue>>&StatementsArray = FPlayFabJsonHelpers::ReadArray(obj, TEXT("Statements"));
