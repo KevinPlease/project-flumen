@@ -10,48 +10,15 @@ Plugins/Assets from UE Marketplace
 
 ==================================================================================
 
+Milestone #2 -> Single Player mode
+    - Game Mode changes
+        - GM Classic Base
+            + Base methods for configuring the game rules, cards...
+        - GM Classic Multiplayer (previously GM_Classic)
+            - will have the extra logic as an addition to the base events, config
+                + should first call Parent event and then continue with own specific multiplayer logic
+        - GM Classic Singleplayer (new offline gm)
+            - will have the extra logic as an addition to the base events, config
+                + should first call Parent event and then continue with own specific singleplayer logic
 
-CHECK for map design
-    - Interior Toolkit
-    - Stylized Forest
-    
 
-Build fingerprint: 'Redmi/curtana_global/curtana:11/RKQ1.200826.002/V12.5.2.0.RJWMIXM:user/release-keys'
-F/DEBUG   : Revision: '0'
-F/DEBUG   : ABI: 'arm64'
-F/DEBUG   : Timestamp: 2022-01-22 12:27:25+0100
-F/DEBUG   : pid: 31937, tid: 32024, name: TaskGraphHP 4  >>> com.daydreaming.projectflumen <<<
-F/DEBUG   : uid: 10583
-F/DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x6d0075006c0336
-F/DEBUG   :     x0  00000072320baa00  x1  00000071fc5a2498  x2  00000071f3ec30a0  x3  00000071fdba6480
-F/DEBUG   :     x4  0000007236501000  x5  00000071ff1a6f80  x6  00000071fc54c068  x7  00000071fc54c070
-F/DEBUG   :     x8  006d0075006c032e  x9  0000000000000018  x10 006d0075006c0046  x11 0000000000000001
-F/DEBUG   :     x12 00000071fc54c058  x13 00000071fc54c060  x14 0000000000000000  x15 00000071f4647900
-F/DEBUG   :     x16 0000007231ce4948  x17 0000007326c0cb4c  x18 000000721a600000  x19 0000007236505140
-F/DEBUG   :     x20 00000071fb8ad760  x21 00000072320baa00  x22 0000000000000000  x23 00000072320bb000
-F/DEBUG   :     x24 0000000000000000  x25 0000000000000001  x26 00000071fc59c480  x27 0000000000000000
-F/DEBUG   :     x28 0000000000000000  x29 00000072320ba4f0
-F/DEBUG   :     lr  000000722df2c5b4  sp  00000072320ba4d0  pc  000000722de3b494  pst 0000000020001000
-F/DEBUG   : backtrace:
-F/DEBUG   :       #00 pc 0000000008a79494  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FGCCollector<(EFastReferenceCollectorOptions)1>::HandleObjectReference(UObject*&, UObject const*, FProperty const*)+124) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a33
-4)
-F/DEBUG   :       #01 pc 0000000008b6a5b0  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FPersistentFrameCollectorArchive::operator<<(UObject*&)+160) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #02 pc 0000000008ad3f2c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FObjectProperty::SerializeItem(FStructuredArchiveSlot, void*, void const*) const+292) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #03 pc 00000000089d2a2c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (UStruct::SerializeBin(FStructuredArchiveSlot, void*) const+332) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #04 pc 00000000089d7e40  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (UScriptStruct::SerializeItem(FStructuredArchiveSlot, void*, void const*)+300) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #05 pc 0000000008ae41bc  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FStructProperty::SerializeItem(FStructuredArchiveSlot, void*, void const*) const+116) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #06 pc 00000000089d2a2c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (UStruct::SerializeBin(FStructuredArchiveSlot, void*) const+332) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #07 pc 000000000a6a196c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (UBlueprintGeneratedClass::AddReferencedObjectsInUbergraphFrame(UObject*, FReferenceCollector&)+264) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #08 pc 0000000008a77f30  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (TFastReferenceCollector<FGCReferenceProcessor<(EFastReferenceCollectorOptions)1>, FGCCollector<(EFastReferenceCollectorOptions)1>, FGCArrayPool, (EFastReferenceCollectorO
-ptions)1>::ProcessObjectArray(FGCArrayStruct&, TRefCountPtr<FGraphEvent> const&)+3168) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #09 pc 0000000008a7a030  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (TFastReferenceCollector<FGCReferenceProcessor<(EFastReferenceCollectorOptions)1>, FGCCollector<(EFastReferenceCollectorOptions)1>, FGCArrayPool, (EFastReferenceCollectorO
-ptions)1>::FCollectorTaskQueue::DoTask()+768) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #10 pc 0000000008a79bac  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (TGraphTask<TFastReferenceCollector<FGCReferenceProcessor<(EFastReferenceCollectorOptions)1>, FGCCollector<(EFastReferenceCollectorOptions)1>, FGCArrayPool, (EFastReferenc
-eCollectorOptions)1>::FCollectorTaskProcessorTask>::ExecuteTask(TArray<FBaseGraphTask*, TSizedDefaultAllocator<32> >&, ENamedThreads::Type)+44) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #11 pc 00000000086c6f7c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FTaskThreadAnyThread::ProcessTasks()+172) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #12 pc 00000000086c6c8c  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FTaskThreadAnyThread::ProcessTasksUntilQuit(int)+68) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #13 pc 00000000086c6b24  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FTaskThreadBase::Run()+20) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #14 pc 000000000873cedc  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FRunnableThreadPThread::Run()+96) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #15 pc 00000000086c5c94  /data/app/~~VnQHUi3rvB0mTpdIEgmWyQ==/com.daydreaming.projectflumen-ALmB77sIuFW7iGGsAtzafw==/split_config.arm64_v8a.apk!libUE4.so (offset 0xdf000) (FRunnableThreadPThread::_ThreadProc(void*)+68) (BuildId: 232bb972ad5fb7277e5d181339d5d078c486a334)
-F/DEBUG   :       #16 pc 00000000000eb8a8  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+64) (BuildId: 2e8a650ddf4a10855ff9ad91c011753e)
-F/DEBUG   :       #17 pc 000000000008bac8  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64) (BuildId: 2e8a650ddf4a10855ff9ad91c011753e)
