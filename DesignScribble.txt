@@ -13,24 +13,10 @@ Plugins/Assets from UE Marketplace
 Milestone #2 -> Single Player mode
     
     - Special 'AI' class* to do "auto" card logic:
-        - Should create x AIs in the beginning of GM SP
 
-        - culling
-            + Find next available card pair and cull (loop over all cards)
-            + Should call respective Dispatcher and let parent (GM) know of Culling Attempt
-        - picking
-            - On Next Turn, if the active player is not 0 and its the Picking phase,
-                call AI to auto-pick card from the nextPlayerIndex
-                + Pass to AI method the card size of nextPlayerIndex deck and
-                    return a random int within that range.
-                + Call GM: EventPlayerPickedCard with the index
-        - shuffling
-            ...
+    TODO: 16 - Feb
+    - AI culling check after picking card
 
-*class (O_AI) - to be as similar to a PC as possible
-    - bind events from the GS, the same way PC does
-    - make use of Dispatchers to call GM/GS methods in a similar PC way
 
-    Events from PC:
-    1) Event Connected
-    2) 
+    Improve:
+    Randomize AI CullingInterval 
