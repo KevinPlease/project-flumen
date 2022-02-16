@@ -17,6 +17,3 @@ Milestone #2 -> Single Player mode
     TODO: 16 - Feb
     - AI culling check after picking card
 
-
-    Improve:
-    Randomize AI CullingInterval 
