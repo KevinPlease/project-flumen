@@ -9,7 +9,9 @@ public class ProjectFlumen : ModuleRules
 		bUseRTTI = false;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Networking", "Sockets", "HTTP", "OnlineSubsystem", "PlayFab", "PlayFabCpp", "PlayFabCommon" });
+		PublicDependencyModuleNames.AddRange(new string[] {
+            "Core", "CoreUObject", "Engine", "InputCore", "Networking", "Sockets", "HTTP",
+            "OnlineSubsystem", "PlayFab", "PlayFabCpp", "PlayFabCommon" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
@@ -19,7 +21,17 @@ public class ProjectFlumen : ModuleRules
      	// DynamicallyLoadedModuleNames.Add("OnlineSubsystemNull");
         // To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
 
-        if (Target.Type == global::UnrealBuildTool.TargetType.Server)
+        if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystem", "OnlineSubsystemGooglePlay" });
+            // DynamicallyLoadedModuleNames.Add("OnlineSubsystemGooglePlay");
+        } else if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+            PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystem", "OnlineSubsystemIOS" });
+            // DynamicallyLoadedModuleNames.Add("OnlineSubsystemIOS");
+        }
+
+            if (Target.Type == global::UnrealBuildTool.TargetType.Server)
         {
             bEnableExceptions = true;
 
