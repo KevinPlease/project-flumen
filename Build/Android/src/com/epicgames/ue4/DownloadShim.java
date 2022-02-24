@@ -1,10 +1,10 @@
 package com.epicgames.ue4;
 
-import com.daydreaming.projectflumen.OBBDownloaderService;
-import com.daydreaming.projectflumen.DownloaderActivity;
+import com.daydreaming.gomarica.OBBDownloaderService;
+import com.daydreaming.gomarica.DownloaderActivity;
 import android.app.Activity;
 import com.google.android.vending.expansion.downloader.Helpers;
-import com.daydreaming.projectflumen.OBBData;
+import com.daydreaming.gomarica.OBBData;
 
 
 public class DownloadShim

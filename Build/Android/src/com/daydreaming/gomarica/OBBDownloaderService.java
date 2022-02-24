@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.daydreaming.projectflumen;
+package com.daydreaming.gomarica;
 
 import com.google.android.vending.expansion.downloader.impl.DownloaderService;
 
@@ -61,6 +61,6 @@ public class OBBDownloaderService extends DownloaderService {
      */
     @Override
     public String getAlarmReceiverClassName() {
-        return com.daydreaming.projectflumen.AlarmReceiver.class.getName();
+        return com.daydreaming.gomarica.AlarmReceiver.class.getName();
     }
 }

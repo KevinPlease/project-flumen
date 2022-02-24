@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.daydreaming.projectflumen;
+package com.daydreaming.gomarica;
 
 import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
 

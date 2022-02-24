@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.daydreaming.projectflumen;
+package com.daydreaming.gomarica;
 
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.android.vending.expansion.zipfile.ZipResourceFile.ZipEntryRO;
