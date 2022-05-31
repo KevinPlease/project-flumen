@@ -45,49 +45,6 @@ namespace CloudScriptModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
-    struct PLAYFABCPP_API FAzureResourceSystemData : public PlayFab::FPlayFabCppBaseModel
-    {
-        // [optional] The timestamp of resource creation (UTC)
-        Boxed<FDateTime> CreatedAt;
-
-        // [optional] The identity that created the resource
-        FString CreatedBy;
-
-        // [optional] The type of identity that created the resource
-        FString CreatedByType;
-
-        // [optional] The type of identity that last modified the resource
-        Boxed<FDateTime> LastModifiedAt;
-
-        // [optional] The identity that last modified the resource
-        FString LastModifiedBy;
-
-        // [optional] The type of identity that last modified the resource
-        FString LastModifiedByType;
-
-        FAzureResourceSystemData() :
-            FPlayFabCppBaseModel(),
-            CreatedAt(),
-            CreatedBy(),
-            CreatedByType(),
-            LastModifiedAt(),
-            LastModifiedBy(),
-            LastModifiedByType()
-            {}
-
-        FAzureResourceSystemData(const FAzureResourceSystemData& src) = default;
-
-        FAzureResourceSystemData(const TSharedPtr<FJsonObject>& obj) : FAzureResourceSystemData()
-        {
-            readFromValue(obj);
-        }
-
-        ~FAzureResourceSystemData();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
     enum CloudScriptRevisionOption
     {
         CloudScriptRevisionOptionLive,
@@ -604,7 +561,7 @@ namespace CloudScriptModels
     {
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
-        // [optional] The entity to perform this action on.
+        // [optional] The optional entity to perform this action on. Defaults to the currently logged in entity.
         TSharedPtr<FEntityKey> Entity;
 
         // The name of the CloudScript function to execute
@@ -657,7 +614,7 @@ namespace CloudScriptModels
     {
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
-        // [optional] The entity to perform this action on.
+        // [optional] The optional entity to perform this action on. Defaults to the currently logged in entity.
         TSharedPtr<FEntityKey> Entity;
 
         // The name of the CloudScript function to execute
@@ -839,9 +796,6 @@ namespace CloudScriptModels
         // [optional] The name of the queue for a queue trigger Azure Function.
         FString QueueName;
 
-        // [optional] System Data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
-
         // [optional] The trigger type for the function.
         FString TriggerType;
 
@@ -850,7 +804,6 @@ namespace CloudScriptModels
             ConnectionString(),
             FunctionUrl(),
             QueueName(),
-            SystemData(nullptr),
             TriggerType()
             {}
 
@@ -875,14 +828,10 @@ namespace CloudScriptModels
         // [optional] The URL of the function.
         FString FunctionUrl;
 
-        // [optional] The System data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
-
         FHttpFunctionModel() :
             FPlayFabCppBaseModel(),
             FunctionName(),
-            FunctionUrl(),
-            SystemData(nullptr)
+            FunctionUrl()
             {}
 
         FHttpFunctionModel(const FHttpFunctionModel& src) = default;
@@ -1043,15 +992,11 @@ namespace CloudScriptModels
         // [optional] The name of the queue that triggers the Azure Function.
         FString QueueName;
 
-        // [optional] The System data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
-
         FQueuedFunctionModel() :
             FPlayFabCppBaseModel(),
             ConnectionString(),
             FunctionName(),
-            QueueName(),
-            SystemData(nullptr)
+            QueueName()
             {}
 
         FQueuedFunctionModel(const FQueuedFunctionModel& src) = default;
@@ -1594,7 +1539,7 @@ namespace CloudScriptModels
     {
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
-        // [optional] The entity to perform this action on.
+        // [optional] The optional entity to perform this action on. Defaults to the currently logged in entity.
         TSharedPtr<FEntityKey> Entity;
 
         // The result of the function execution.
@@ -1664,9 +1609,6 @@ namespace CloudScriptModels
 
     struct PLAYFABCPP_API FRegisterHttpFunctionRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // [optional] The Id of the Azure Resource
-        FString AzureResourceId;
-
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
         // The name of the function to register
@@ -1675,19 +1617,14 @@ namespace CloudScriptModels
         // Full URL for Azure Function that implements the function.
         FString FunctionUrl;
 
-        // [optional] System Data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
-
         // [optional] The Id of the parent Title
         FString TitleId;
 
         FRegisterHttpFunctionRequest() :
             FPlayFabCppRequestCommon(),
-            AzureResourceId(),
             CustomTags(),
             FunctionName(),
             FunctionUrl(),
-            SystemData(nullptr),
             TitleId()
             {}
 
@@ -1706,9 +1643,6 @@ namespace CloudScriptModels
 
     struct PLAYFABCPP_API FRegisterQueuedFunctionRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // [optional] The Id of the Azure Resource
-        FString AzureResourceId;
-
         // A connection string for the storage account that hosts the queue for the Azure Function.
         FString ConnectionString;
 
@@ -1720,20 +1654,15 @@ namespace CloudScriptModels
         // The name of the queue for the Azure Function.
         FString QueueName;
 
-        // [optional] System Data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
-
         // [optional] The Id of the parent Title
         FString TitleId;
 
         FRegisterQueuedFunctionRequest() :
             FPlayFabCppRequestCommon(),
-            AzureResourceId(),
             ConnectionString(),
             CustomTags(),
             FunctionName(),
             QueueName(),
-            SystemData(nullptr),
             TitleId()
             {}
 

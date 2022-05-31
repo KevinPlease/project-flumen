@@ -3287,9 +3287,13 @@ namespace ClientModels
         // [optional] XBox user ID
         FString XboxUserId;
 
+        // [optional] XBox user sandbox
+        FString XboxUserSandbox;
+
         FUserXboxInfo() :
             FPlayFabCppBaseModel(),
-            XboxUserId()
+            XboxUserId(),
+            XboxUserSandbox()
             {}
 
         FUserXboxInfo(const FUserXboxInfo& src) = default;
@@ -6213,6 +6217,80 @@ namespace ClientModels
         }
 
         ~FGetPlayFabIDsFromKongregateIDsResult();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetPlayFabIDsFromNintendoServiceAccountIdsRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // Array of unique Nintendo Switch Account identifiers for which the title needs to get PlayFab identifiers.
+        TArray<FString> NintendoAccountIds;
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest() :
+            FPlayFabCppRequestCommon(),
+            NintendoAccountIds()
+            {}
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest(const FGetPlayFabIDsFromNintendoServiceAccountIdsRequest& src) = default;
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest(const TSharedPtr<FJsonObject>& obj) : FGetPlayFabIDsFromNintendoServiceAccountIdsRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayFabIDsFromNintendoServiceAccountIdsRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FNintendoServiceAccountPlayFabIdPair : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] Unique Nintendo Switch Service Account identifier for a user.
+        FString NintendoServiceAccountId;
+
+        /**
+         * [optional] Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the Nintendo Switch Service Account
+         * identifier.
+         */
+        FString PlayFabId;
+
+        FNintendoServiceAccountPlayFabIdPair() :
+            FPlayFabCppBaseModel(),
+            NintendoServiceAccountId(),
+            PlayFabId()
+            {}
+
+        FNintendoServiceAccountPlayFabIdPair(const FNintendoServiceAccountPlayFabIdPair& src) = default;
+
+        FNintendoServiceAccountPlayFabIdPair(const TSharedPtr<FJsonObject>& obj) : FNintendoServiceAccountPlayFabIdPair()
+        {
+            readFromValue(obj);
+        }
+
+        ~FNintendoServiceAccountPlayFabIdPair();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetPlayFabIDsFromNintendoServiceAccountIdsResult : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] Mapping of Nintendo Switch Service Account identifiers to PlayFab identifiers.
+        TArray<FNintendoServiceAccountPlayFabIdPair> Data;
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult() :
+            FPlayFabCppResultCommon(),
+            Data()
+            {}
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult(const FGetPlayFabIDsFromNintendoServiceAccountIdsResult& src) = default;
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult(const TSharedPtr<FJsonObject>& obj) : FGetPlayFabIDsFromNintendoServiceAccountIdsResult()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayFabIDsFromNintendoServiceAccountIdsResult();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -10603,103 +10681,6 @@ namespace ClientModels
         }
 
         ~FSetPlayerSecretResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FStartGameRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // version information for the build of the game server which is to be started
-        FString BuildVersion;
-
-        // [optional] character to use for stats based matching. Leave null to use account stats
-        FString CharacterId;
-
-        // [optional] custom command line argument when starting game server process
-        FString CustomCommandLineData;
-
-        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
-        TMap<FString, FString> CustomTags;
-        // the title-defined game mode this server is to be running (defaults to 0 if there is only one mode)
-        FString GameMode;
-
-        // the region to associate this server with for match filtering
-        Region pfRegion;
-
-        // [optional] player statistic for others to use in finding this game. May be null for no stat-based matching
-        FString StatisticName;
-
-        FStartGameRequest() :
-            FPlayFabCppRequestCommon(),
-            BuildVersion(),
-            CharacterId(),
-            CustomCommandLineData(),
-            CustomTags(),
-            GameMode(),
-            pfRegion(),
-            StatisticName()
-            {}
-
-        FStartGameRequest(const FStartGameRequest& src) = default;
-
-        FStartGameRequest(const TSharedPtr<FJsonObject>& obj) : FStartGameRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FStartGameRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FStartGameResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        // [optional] timestamp for when the server should expire, if applicable
-        FString Expires;
-
-        // [optional] unique identifier for the lobby of the server started
-        FString LobbyID;
-
-        // [optional] password required to log into the server
-        FString Password;
-
-        // [optional] server IPV4 address
-        FString ServerIPV4Address;
-
-        // [optional] server IPV6 address
-        FString ServerIPV6Address;
-
-        // [optional] port on the server to be used for communication
-        Boxed<int32> ServerPort;
-
-        // [optional] server public DNS name
-        FString ServerPublicDNSName;
-
-        // [optional] unique identifier for the server
-        FString Ticket;
-
-        FStartGameResult() :
-            FPlayFabCppResultCommon(),
-            Expires(),
-            LobbyID(),
-            Password(),
-            ServerIPV4Address(),
-            ServerIPV6Address(),
-            ServerPort(),
-            ServerPublicDNSName(),
-            Ticket()
-            {}
-
-        FStartGameResult(const FStartGameResult& src) = default;
-
-        FStartGameResult(const TSharedPtr<FJsonObject>& obj) : FStartGameResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FStartGameResult();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;

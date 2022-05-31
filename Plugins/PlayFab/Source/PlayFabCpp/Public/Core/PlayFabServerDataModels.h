@@ -1135,9 +1135,13 @@ namespace ServerModels
         // [optional] XBox user ID
         FString XboxUserId;
 
+        // [optional] XBox user sandbox
+        FString XboxUserSandbox;
+
         FUserXboxInfo() :
             FPlayFabCppBaseModel(),
-            XboxUserId()
+            XboxUserId(),
+            XboxUserSandbox()
             {}
 
         FUserXboxInfo(const FUserXboxInfo& src) = default;
@@ -1352,49 +1356,6 @@ namespace ServerModels
         }
 
         ~FAwardSteamAchievementResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FAzureResourceSystemData : public PlayFab::FPlayFabCppBaseModel
-    {
-        // [optional] The timestamp of resource creation (UTC)
-        Boxed<FDateTime> CreatedAt;
-
-        // [optional] The identity that created the resource
-        FString CreatedBy;
-
-        // [optional] The type of identity that created the resource
-        FString CreatedByType;
-
-        // [optional] The type of identity that last modified the resource
-        Boxed<FDateTime> LastModifiedAt;
-
-        // [optional] The identity that last modified the resource
-        FString LastModifiedBy;
-
-        // [optional] The type of identity that last modified the resource
-        FString LastModifiedByType;
-
-        FAzureResourceSystemData() :
-            FPlayFabCppBaseModel(),
-            CreatedAt(),
-            CreatedBy(),
-            CreatedByType(),
-            LastModifiedAt(),
-            LastModifiedBy(),
-            LastModifiedByType()
-            {}
-
-        FAzureResourceSystemData(const FAzureResourceSystemData& src) = default;
-
-        FAzureResourceSystemData(const TSharedPtr<FJsonObject>& obj) : FAzureResourceSystemData()
-        {
-            readFromValue(obj);
-        }
-
-        ~FAzureResourceSystemData();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -5547,6 +5508,80 @@ namespace ServerModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FGetPlayFabIDsFromNintendoServiceAccountIdsRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // Array of unique Nintendo Switch Account identifiers for which the title needs to get PlayFab identifiers.
+        TArray<FString> NintendoAccountIds;
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest() :
+            FPlayFabCppRequestCommon(),
+            NintendoAccountIds()
+            {}
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest(const FGetPlayFabIDsFromNintendoServiceAccountIdsRequest& src) = default;
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsRequest(const TSharedPtr<FJsonObject>& obj) : FGetPlayFabIDsFromNintendoServiceAccountIdsRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayFabIDsFromNintendoServiceAccountIdsRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FNintendoServiceAccountPlayFabIdPair : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] Unique Nintendo Switch Service Account identifier for a user.
+        FString NintendoServiceAccountId;
+
+        /**
+         * [optional] Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the Nintendo Switch Service Account
+         * identifier.
+         */
+        FString PlayFabId;
+
+        FNintendoServiceAccountPlayFabIdPair() :
+            FPlayFabCppBaseModel(),
+            NintendoServiceAccountId(),
+            PlayFabId()
+            {}
+
+        FNintendoServiceAccountPlayFabIdPair(const FNintendoServiceAccountPlayFabIdPair& src) = default;
+
+        FNintendoServiceAccountPlayFabIdPair(const TSharedPtr<FJsonObject>& obj) : FNintendoServiceAccountPlayFabIdPair()
+        {
+            readFromValue(obj);
+        }
+
+        ~FNintendoServiceAccountPlayFabIdPair();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetPlayFabIDsFromNintendoServiceAccountIdsResult : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] Mapping of Nintendo Switch Service Account identifiers to PlayFab identifiers.
+        TArray<FNintendoServiceAccountPlayFabIdPair> Data;
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult() :
+            FPlayFabCppResultCommon(),
+            Data()
+            {}
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult(const FGetPlayFabIDsFromNintendoServiceAccountIdsResult& src) = default;
+
+        FGetPlayFabIDsFromNintendoServiceAccountIdsResult(const TSharedPtr<FJsonObject>& obj) : FGetPlayFabIDsFromNintendoServiceAccountIdsResult()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayFabIDsFromNintendoServiceAccountIdsResult();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         // Array of unique Nintendo Switch Device identifiers for which the title needs to get PlayFab identifiers.
@@ -9243,9 +9278,6 @@ namespace ServerModels
 
     struct PLAYFABCPP_API FSetTitleDataRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // [optional] Id of azure resource
-        FString AzureResourceId;
-
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
         /**
@@ -9253,9 +9285,6 @@ namespace ServerModels
          * name.) Keys are trimmed of whitespace. Keys may not begin with the '!' character.
          */
         FString Key;
-
-        // [optional] System Data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
 
         /**
          * [optional] Unique identifier for the title, found in the Settings > Game Properties section of the PlayFab developer site when a
@@ -9268,10 +9297,8 @@ namespace ServerModels
 
         FSetTitleDataRequest() :
             FPlayFabCppRequestCommon(),
-            AzureResourceId(),
             CustomTags(),
             Key(),
-            SystemData(nullptr),
             TitleId(),
             Value()
             {}
@@ -9291,12 +9318,8 @@ namespace ServerModels
 
     struct PLAYFABCPP_API FSetTitleDataResult : public PlayFab::FPlayFabCppResultCommon
     {
-        // [optional] Id of azure resource
-        FString AzureResourceId;
-
         FSetTitleDataResult() :
-            FPlayFabCppResultCommon(),
-            AzureResourceId()
+            FPlayFabCppResultCommon()
             {}
 
         FSetTitleDataResult(const FSetTitleDataResult& src) = default;

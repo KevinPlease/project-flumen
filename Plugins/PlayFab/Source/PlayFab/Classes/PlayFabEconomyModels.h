@@ -356,9 +356,6 @@ struct PLAYFAB_API FEconomyGetItemPublishStatusResponse : public FPlayFabResultC
 {
     GENERATED_USTRUCT_BODY()
 public:
-    /** Scan results for any items that failed content scans. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Economy | Catalog Models")
-        TArray<UPlayFabJsonObject*> FailedScanResults;
     /** High level status of the published item. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Economy | Catalog Models")
         EPublishResult Result;

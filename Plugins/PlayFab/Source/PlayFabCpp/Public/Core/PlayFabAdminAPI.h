@@ -22,7 +22,6 @@ namespace PlayFab
         DECLARE_DELEGATE_OneParam(FAddLocalizedNewsDelegate, const AdminModels::FAddLocalizedNewsResult&);
         DECLARE_DELEGATE_OneParam(FAddNewsDelegate, const AdminModels::FAddNewsResult&);
         DECLARE_DELEGATE_OneParam(FAddPlayerTagDelegate, const AdminModels::FAddPlayerTagResult&);
-        DECLARE_DELEGATE_OneParam(FAddServerBuildDelegate, const AdminModels::FAddServerBuildResult&);
         DECLARE_DELEGATE_OneParam(FAddUserVirtualCurrencyDelegate, const AdminModels::FModifyUserVirtualCurrencyResult&);
         DECLARE_DELEGATE_OneParam(FAddVirtualCurrencyTypesDelegate, const AdminModels::FBlankResult&);
         DECLARE_DELEGATE_OneParam(FBanUsersDelegate, const AdminModels::FBanUsersResult&);
@@ -46,6 +45,7 @@ namespace PlayFab
         DECLARE_DELEGATE_OneParam(FDeleteTitleDelegate, const AdminModels::FDeleteTitleResult&);
         DECLARE_DELEGATE_OneParam(FDeleteTitleDataOverrideDelegate, const AdminModels::FDeleteTitleDataOverrideResult&);
         DECLARE_DELEGATE_OneParam(FExportMasterPlayerDataDelegate, const AdminModels::FExportMasterPlayerDataResult&);
+        DECLARE_DELEGATE_OneParam(FExportPlayersInSegmentDelegate, const AdminModels::FExportPlayersInSegmentResult&);
         DECLARE_DELEGATE_OneParam(FGetActionsOnPlayersInSegmentTaskInstanceDelegate, const AdminModels::FGetActionsOnPlayersInSegmentTaskInstanceResult&);
         DECLARE_DELEGATE_OneParam(FGetAllSegmentsDelegate, const AdminModels::FGetAllSegmentsResult&);
         DECLARE_DELEGATE_OneParam(FGetCatalogItemsDelegate, const AdminModels::FGetCatalogItemsResult&);
@@ -69,9 +69,8 @@ namespace PlayFab
         DECLARE_DELEGATE_OneParam(FGetPolicyDelegate, const AdminModels::FGetPolicyResponse&);
         DECLARE_DELEGATE_OneParam(FGetPublisherDataDelegate, const AdminModels::FGetPublisherDataResult&);
         DECLARE_DELEGATE_OneParam(FGetRandomResultTablesDelegate, const AdminModels::FGetRandomResultTablesResult&);
+        DECLARE_DELEGATE_OneParam(FGetSegmentExportDelegate, const AdminModels::FGetPlayersInSegmentExportResponse&);
         DECLARE_DELEGATE_OneParam(FGetSegmentsDelegate, const AdminModels::FGetSegmentsResponse&);
-        DECLARE_DELEGATE_OneParam(FGetServerBuildInfoDelegate, const AdminModels::FGetServerBuildInfoResult&);
-        DECLARE_DELEGATE_OneParam(FGetServerBuildUploadUrlDelegate, const AdminModels::FGetServerBuildUploadURLResult&);
         DECLARE_DELEGATE_OneParam(FGetStoreItemsDelegate, const AdminModels::FGetStoreItemsResult&);
         DECLARE_DELEGATE_OneParam(FGetTaskInstancesDelegate, const AdminModels::FGetTaskInstancesResult&);
         DECLARE_DELEGATE_OneParam(FGetTasksDelegate, const AdminModels::FGetTasksResult&);
@@ -90,13 +89,10 @@ namespace PlayFab
         DECLARE_DELEGATE_OneParam(FIncrementLimitedEditionItemAvailabilityDelegate, const AdminModels::FIncrementLimitedEditionItemAvailabilityResult&);
         DECLARE_DELEGATE_OneParam(FIncrementPlayerStatisticVersionDelegate, const AdminModels::FIncrementPlayerStatisticVersionResult&);
         DECLARE_DELEGATE_OneParam(FListOpenIdConnectionDelegate, const AdminModels::FListOpenIdConnectionResponse&);
-        DECLARE_DELEGATE_OneParam(FListServerBuildsDelegate, const AdminModels::FListBuildsResult&);
         DECLARE_DELEGATE_OneParam(FListVirtualCurrencyTypesDelegate, const AdminModels::FListVirtualCurrencyTypesResult&);
-        DECLARE_DELEGATE_OneParam(FModifyMatchmakerGameModesDelegate, const AdminModels::FModifyMatchmakerGameModesResult&);
         DECLARE_DELEGATE_OneParam(FModifyServerBuildDelegate, const AdminModels::FModifyServerBuildResult&);
         DECLARE_DELEGATE_OneParam(FRefundPurchaseDelegate, const AdminModels::FRefundPurchaseResponse&);
         DECLARE_DELEGATE_OneParam(FRemovePlayerTagDelegate, const AdminModels::FRemovePlayerTagResult&);
-        DECLARE_DELEGATE_OneParam(FRemoveServerBuildDelegate, const AdminModels::FRemoveServerBuildResult&);
         DECLARE_DELEGATE_OneParam(FRemoveVirtualCurrencyTypesDelegate, const AdminModels::FBlankResult&);
         DECLARE_DELEGATE_OneParam(FResetCharacterStatisticsDelegate, const AdminModels::FResetCharacterStatisticsResult&);
         DECLARE_DELEGATE_OneParam(FResetPasswordDelegate, const AdminModels::FResetPasswordResult&);
@@ -117,6 +113,7 @@ namespace PlayFab
         DECLARE_DELEGATE_OneParam(FSetTitleDataDelegate, const AdminModels::FSetTitleDataResult&);
         DECLARE_DELEGATE_OneParam(FSetTitleDataAndOverridesDelegate, const AdminModels::FSetTitleDataAndOverridesResult&);
         DECLARE_DELEGATE_OneParam(FSetTitleInternalDataDelegate, const AdminModels::FSetTitleDataResult&);
+        DECLARE_DELEGATE_OneParam(FSetTitleInternalDataAndOverridesDelegate, const AdminModels::FSetTitleDataAndOverridesResult&);
         DECLARE_DELEGATE_OneParam(FSetupPushNotificationDelegate, const AdminModels::FSetupPushNotificationResult&);
         DECLARE_DELEGATE_OneParam(FSubtractUserVirtualCurrencyDelegate, const AdminModels::FModifyUserVirtualCurrencyResult&);
         DECLARE_DELEGATE_OneParam(FUpdateBansDelegate, const AdminModels::FUpdateBansResult&);
@@ -159,11 +156,6 @@ namespace PlayFab
          * This API will trigger a player_tag_added event and add a tag with the given TagName and PlayFabID to the corresponding player profile. TagName can be used for segmentation and it is limited to 256 characters. Also there is a limit on the number of tags a title can have.
          */
         bool AddPlayerTag(AdminModels::FAddPlayerTagRequest& request, const FAddPlayerTagDelegate& SuccessDelegate = FAddPlayerTagDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        /**
-         * Adds the game server executable specified (previously uploaded - see GetServerBuildUploadUrl) to the set of those a
-         * client is permitted to request in a call to StartGame
-         */
-        bool AddServerBuild(AdminModels::FAddServerBuildRequest& request, const FAddServerBuildDelegate& SuccessDelegate = FAddServerBuildDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Increments the specified virtual currency by the stated amount
         bool AddUserVirtualCurrency(AdminModels::FAddUserVirtualCurrencyRequest& request, const FAddUserVirtualCurrencyDelegate& SuccessDelegate = FAddUserVirtualCurrencyDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
@@ -278,6 +270,13 @@ namespace PlayFab
          * Exports all data associated with the master player account, including data from all titles the player has played, such as statistics, custom data, inventory, purchases, virtual currency balances, characters, group memberships, publisher data, credential data, account linkages, friends list and PlayStream event history. Note, this API queues the player for export and returns a receipt immediately. Record the receipt ID for future reference. It may take some time before the export is available for download. Upon completion of the export, an email containing the URL to download the export dump will be sent to the notification email address configured for the title.
          */
         bool ExportMasterPlayerData(AdminModels::FExportMasterPlayerDataRequest& request, const FExportMasterPlayerDataDelegate& SuccessDelegate = FExportMasterPlayerDataDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
+        /**
+         * Starts an export for the player profiles in a segment. This API creates a snapshot of all the player profiles which
+         * match the segment definition at the time of the API call. Profiles which change while an export is in progress will not
+         * be reflected in the results.
+         * Request must contain the Segment ID
+         */
+        bool ExportPlayersInSegment(AdminModels::FExportPlayersInSegmentRequest& request, const FExportPlayersInSegmentDelegate& SuccessDelegate = FExportPlayersInSegmentDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
          * Get information about a ActionsOnPlayersInSegment task instance.
          * The result includes detail information that's specific to an ActionsOnPlayersInSegment task. To get a list of task instances with generic basic information, use GetTaskInstances.
@@ -404,17 +403,18 @@ namespace PlayFab
         // Retrieves the random drop table configuration for the title
         bool GetRandomResultTables(AdminModels::FGetRandomResultTablesRequest& request, const FGetRandomResultTablesDelegate& SuccessDelegate = FGetRandomResultTablesDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
+         * Retrieves the result of an export started by ExportPlayersInSegment API. If the ExportPlayersInSegment is successful and
+         * complete, this API returns the IndexUrl from which the index file can be downloaded. The index file has a list of urls
+         * from which the files containing the player profile data can be downloaded. Otherwise, it returns the current 'State' of
+         * the export
+         * Request must contain the ExportId
+         */
+        bool GetSegmentExport(AdminModels::FGetPlayersInSegmentExportRequest& request, const FGetSegmentExportDelegate& SuccessDelegate = FGetSegmentExportDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
+        /**
          * Get detail information of a segment and its associated definition(s) and action(s) for a title.
          * Send segment filter details part of GetSegmentsRequest object
          */
         bool GetSegments(AdminModels::FGetSegmentsRequest& request, const FGetSegmentsDelegate& SuccessDelegate = FGetSegmentsDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        // Retrieves the build details for the specified game server executable
-        bool GetServerBuildInfo(AdminModels::FGetServerBuildInfoRequest& request, const FGetServerBuildInfoDelegate& SuccessDelegate = FGetServerBuildInfoDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        /**
-         * Retrieves the pre-authorized URL for uploading a game server package containing a build (does not enable the build for
-         * use - see AddServerBuild)
-         */
-        bool GetServerBuildUploadUrl(AdminModels::FGetServerBuildUploadURLRequest& request, const FGetServerBuildUploadUrlDelegate& SuccessDelegate = FGetServerBuildUploadUrlDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
          * Retrieves the set of items defined for the specified store, including all prices defined
          * A store contains an array of references to items defined in the catalog, along with the prices for the item, in both real world and virtual currencies. These prices act as an override to any prices defined in the catalog. In this way, the base definitions of the items may be defined in the catalog, with all associated properties, while the pricing can be set for each store, as needed. This allows for subsets of goods to be defined for different purposes (in order to simplify showing some, but not all catalog items to users, based upon different characteristics), along with unique prices. Note that all prices defined in the catalog and store definitions for the item are considered valid, and that a compromised client can be made to send a request for an item based upon any of these definitions. If no price is specified in the store for an item, the price set in the catalog should be displayed to the user.
@@ -502,21 +502,11 @@ namespace PlayFab
         bool ListOpenIdConnection(const FListOpenIdConnectionDelegate& SuccessDelegate = FListOpenIdConnectionDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Retrieves a list of all Open ID Connect providers registered to a title.
         bool ListOpenIdConnection(AdminModels::FListOpenIdConnectionRequest& request, const FListOpenIdConnectionDelegate& SuccessDelegate = FListOpenIdConnectionDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        // Retrieves the build details for all game server executables which are currently defined for the title
-
-        bool ListServerBuilds(const FListServerBuildsDelegate& SuccessDelegate = FListServerBuildsDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        // Retrieves the build details for all game server executables which are currently defined for the title
-        bool ListServerBuilds(AdminModels::FListBuildsRequest& request, const FListServerBuildsDelegate& SuccessDelegate = FListServerBuildsDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Retuns the list of all defined virtual currencies for the title
 
         bool ListVirtualCurrencyTypes(const FListVirtualCurrencyTypesDelegate& SuccessDelegate = FListVirtualCurrencyTypesDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Retuns the list of all defined virtual currencies for the title
         bool ListVirtualCurrencyTypes(AdminModels::FListVirtualCurrencyTypesRequest& request, const FListVirtualCurrencyTypesDelegate& SuccessDelegate = FListVirtualCurrencyTypesDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        /**
-         * Updates the game server mode details for the specified game server executable
-         * These details are used by the PlayFab matchmaking service to determine if an existing Game Server Instance has room for additional users, and by the PlayFab game server management service to determine when a new Game Server Host should be created in order to prevent excess load on existing Hosts. This operation is not additive. Using it will cause the game mode definition for the game server executable in question to be created from scratch. If there is an existing game server mode definition for the given BuildVersion, it will be deleted and replaced with the data specified in this call.
-         */
-        bool ModifyMatchmakerGameModes(AdminModels::FModifyMatchmakerGameModesRequest& request, const FModifyMatchmakerGameModesDelegate& SuccessDelegate = FModifyMatchmakerGameModesDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Updates the build details for the specified game server executable
         bool ModifyServerBuild(AdminModels::FModifyServerBuildRequest& request, const FModifyServerBuildDelegate& SuccessDelegate = FModifyServerBuildDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         // Attempts to process an order refund through the original real money payment provider.
@@ -526,11 +516,6 @@ namespace PlayFab
          * This API will trigger a player_tag_removed event and remove a tag with the given TagName and PlayFabID from the corresponding player profile. TagName can be used for segmentation and it is limited to 256 characters
          */
         bool RemovePlayerTag(AdminModels::FRemovePlayerTagRequest& request, const FRemovePlayerTagDelegate& SuccessDelegate = FRemovePlayerTagDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
-        /**
-         * Removes the game server executable specified from the set of those a client is permitted to request in a call to
-         * StartGame
-         */
-        bool RemoveServerBuild(AdminModels::FRemoveServerBuildRequest& request, const FRemoveServerBuildDelegate& SuccessDelegate = FRemoveServerBuildDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
          * Removes one or more virtual currencies from the set defined for the title.
          * Virtual currencies to be removed cannot have entries in any catalog nor store for the title. Note that this operation will not remove player balances for the removed currencies; if a deleted currency is recreated at any point, user balances will be in an undefined state.
@@ -627,6 +612,11 @@ namespace PlayFab
          * This API method is designed to store title specific values which are accessible only by the server. These values can be used to tweak settings used by game servers and Cloud Scripts without the need to update and re-deploy. This operation is additive. If a Key does not exist in the current dataset, it will be added with the specified Value. If it already exists, the Value for that key will be overwritten with the new Value.
          */
         bool SetTitleInternalData(AdminModels::FSetTitleDataRequest& request, const FSetTitleInternalDataDelegate& SuccessDelegate = FSetTitleInternalDataDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
+        /**
+         * Set and delete key-value pairs in a title internal data override instance.
+         * This API method is designed to set and delete key-value pairs in a title internal data override instance. If the key exists and the new value is empty, the method will delete the key; otherwise, the method will update the current value with the new value. Keys are trimmed and cannot start with '!'.
+         */
+        bool SetTitleInternalDataAndOverrides(AdminModels::FSetTitleDataAndOverridesRequest& request, const FSetTitleInternalDataAndOverridesDelegate& SuccessDelegate = FSetTitleInternalDataAndOverridesDelegate(), const FPlayFabErrorDelegate& ErrorDelegate = FPlayFabErrorDelegate());
         /**
          * Sets the Amazon Resource Name (ARN) for iOS and Android push notifications. Documentation on the exact restrictions can
          * be found at: http://docs.aws.amazon.com/sns/latest/api/API_CreatePlatformApplication.html. Currently, Amazon device
@@ -731,7 +721,6 @@ namespace PlayFab
         void OnAddLocalizedNewsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddLocalizedNewsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnAddNewsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddNewsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnAddPlayerTagResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddPlayerTagDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnAddServerBuildResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddServerBuildDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnAddUserVirtualCurrencyResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddUserVirtualCurrencyDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnAddVirtualCurrencyTypesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FAddVirtualCurrencyTypesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnBanUsersResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FBanUsersDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
@@ -755,6 +744,7 @@ namespace PlayFab
         void OnDeleteTitleResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FDeleteTitleDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnDeleteTitleDataOverrideResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FDeleteTitleDataOverrideDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnExportMasterPlayerDataResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FExportMasterPlayerDataDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
+        void OnExportPlayersInSegmentResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FExportPlayersInSegmentDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetActionsOnPlayersInSegmentTaskInstanceResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetActionsOnPlayersInSegmentTaskInstanceDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetAllSegmentsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetAllSegmentsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetCatalogItemsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetCatalogItemsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
@@ -778,9 +768,8 @@ namespace PlayFab
         void OnGetPolicyResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetPolicyDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetPublisherDataResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetPublisherDataDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetRandomResultTablesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetRandomResultTablesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
+        void OnGetSegmentExportResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetSegmentExportDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetSegmentsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetSegmentsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnGetServerBuildInfoResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetServerBuildInfoDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnGetServerBuildUploadUrlResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetServerBuildUploadUrlDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetStoreItemsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetStoreItemsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetTaskInstancesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetTaskInstancesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnGetTasksResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FGetTasksDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
@@ -799,13 +788,10 @@ namespace PlayFab
         void OnIncrementLimitedEditionItemAvailabilityResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FIncrementLimitedEditionItemAvailabilityDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnIncrementPlayerStatisticVersionResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FIncrementPlayerStatisticVersionDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnListOpenIdConnectionResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FListOpenIdConnectionDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnListServerBuildsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FListServerBuildsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnListVirtualCurrencyTypesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FListVirtualCurrencyTypesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnModifyMatchmakerGameModesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FModifyMatchmakerGameModesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnModifyServerBuildResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FModifyServerBuildDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnRefundPurchaseResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FRefundPurchaseDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnRemovePlayerTagResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FRemovePlayerTagDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
-        void OnRemoveServerBuildResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FRemoveServerBuildDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnRemoveVirtualCurrencyTypesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FRemoveVirtualCurrencyTypesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnResetCharacterStatisticsResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FResetCharacterStatisticsDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnResetPasswordResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FResetPasswordDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
@@ -826,6 +812,7 @@ namespace PlayFab
         void OnSetTitleDataResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSetTitleDataDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnSetTitleDataAndOverridesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSetTitleDataAndOverridesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnSetTitleInternalDataResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSetTitleInternalDataDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
+        void OnSetTitleInternalDataAndOverridesResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSetTitleInternalDataAndOverridesDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnSetupPushNotificationResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSetupPushNotificationDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnSubtractUserVirtualCurrencyResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FSubtractUserVirtualCurrencyDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);
         void OnUpdateBansResult(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, FUpdateBansDelegate SuccessDelegate, FPlayFabErrorDelegate ErrorDelegate);

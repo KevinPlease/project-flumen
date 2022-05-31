@@ -6690,6 +6690,12 @@ void PlayFab::ClientModels::FUserXboxInfo::writeJSON(JsonWriter& writer) const
         writer->WriteValue(XboxUserId);
     }
 
+    if (XboxUserSandbox.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("XboxUserSandbox"));
+        writer->WriteValue(XboxUserSandbox);
+    }
+
     writer->WriteObjectEnd();
 }
 
@@ -6702,6 +6708,13 @@ bool PlayFab::ClientModels::FUserXboxInfo::readFromValue(const TSharedPtr<FJsonO
     {
         FString TmpValue;
         if (XboxUserIdValue->TryGetString(TmpValue)) { XboxUserId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> XboxUserSandboxValue = obj->TryGetField(TEXT("XboxUserSandbox"));
+    if (XboxUserSandboxValue.IsValid() && !XboxUserSandboxValue->IsNull())
+    {
+        FString TmpValue;
+        if (XboxUserSandboxValue->TryGetString(TmpValue)) { XboxUserSandbox = TmpValue; }
     }
 
     return HasSucceeded;
@@ -12282,6 +12295,114 @@ bool PlayFab::ClientModels::FGetPlayFabIDsFromKongregateIDsResult::readFromValue
     {
         TSharedPtr<FJsonValue> CurrentItem = DataArray[Idx];
         Data.Add(FKongregatePlayFabIdPair(CurrentItem->AsObject()));
+    }
+
+
+    return HasSucceeded;
+}
+
+PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::~FGetPlayFabIDsFromNintendoServiceAccountIdsRequest()
+{
+
+}
+
+void PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    writer->WriteArrayStart(TEXT("NintendoAccountIds"));
+    for (const FString& item : NintendoAccountIds)
+        writer->WriteValue(item);
+    writer->WriteArrayEnd();
+
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    HasSucceeded &= obj->TryGetStringArrayField(TEXT("NintendoAccountIds"), NintendoAccountIds);
+
+    return HasSucceeded;
+}
+
+PlayFab::ClientModels::FNintendoServiceAccountPlayFabIdPair::~FNintendoServiceAccountPlayFabIdPair()
+{
+
+}
+
+void PlayFab::ClientModels::FNintendoServiceAccountPlayFabIdPair::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (NintendoServiceAccountId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("NintendoServiceAccountId"));
+        writer->WriteValue(NintendoServiceAccountId);
+    }
+
+    if (PlayFabId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("PlayFabId"));
+        writer->WriteValue(PlayFabId);
+    }
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ClientModels::FNintendoServiceAccountPlayFabIdPair::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonValue> NintendoServiceAccountIdValue = obj->TryGetField(TEXT("NintendoServiceAccountId"));
+    if (NintendoServiceAccountIdValue.IsValid() && !NintendoServiceAccountIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (NintendoServiceAccountIdValue->TryGetString(TmpValue)) { NintendoServiceAccountId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PlayFabIdValue = obj->TryGetField(TEXT("PlayFabId"));
+    if (PlayFabIdValue.IsValid() && !PlayFabIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (PlayFabIdValue->TryGetString(TmpValue)) { PlayFabId = TmpValue; }
+    }
+
+    return HasSucceeded;
+}
+
+PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::~FGetPlayFabIDsFromNintendoServiceAccountIdsResult()
+{
+
+}
+
+void PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (Data.Num() != 0)
+    {
+        writer->WriteArrayStart(TEXT("Data"));
+        for (const FNintendoServiceAccountPlayFabIdPair& item : Data)
+            item.writeJSON(writer);
+        writer->WriteArrayEnd();
+    }
+
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ClientModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TArray<TSharedPtr<FJsonValue>>&DataArray = FPlayFabJsonHelpers::ReadArray(obj, TEXT("Data"));
+    for (int32 Idx = 0; Idx < DataArray.Num(); Idx++)
+    {
+        TSharedPtr<FJsonValue> CurrentItem = DataArray[Idx];
+        Data.Add(FNintendoServiceAccountPlayFabIdPair(CurrentItem->AsObject()));
     }
 
 
@@ -21107,246 +21228,6 @@ void PlayFab::ClientModels::FSetPlayerSecretResult::writeJSON(JsonWriter& writer
 bool PlayFab::ClientModels::FSetPlayerSecretResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
 {
     bool HasSucceeded = true;
-
-    return HasSucceeded;
-}
-
-PlayFab::ClientModels::FStartGameRequest::~FStartGameRequest()
-{
-
-}
-
-void PlayFab::ClientModels::FStartGameRequest::writeJSON(JsonWriter& writer) const
-{
-    writer->WriteObjectStart();
-
-    if (!BuildVersion.IsEmpty() == false)
-    {
-        UE_LOG(LogTemp, Error, TEXT("This field is required: StartGameRequest::BuildVersion, PlayFab calls may not work if it remains empty."));
-    }
-    else
-    {
-        writer->WriteIdentifierPrefix(TEXT("BuildVersion"));
-        writer->WriteValue(BuildVersion);
-    }
-
-    if (CharacterId.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("CharacterId"));
-        writer->WriteValue(CharacterId);
-    }
-
-    if (CustomCommandLineData.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("CustomCommandLineData"));
-        writer->WriteValue(CustomCommandLineData);
-    }
-
-    if (CustomTags.Num() != 0)
-    {
-        writer->WriteObjectStart(TEXT("CustomTags"));
-        for (TMap<FString, FString>::TConstIterator It(CustomTags); It; ++It)
-        {
-            writer->WriteIdentifierPrefix((*It).Key);
-            writer->WriteValue((*It).Value);
-        }
-        writer->WriteObjectEnd();
-    }
-
-    if (!GameMode.IsEmpty() == false)
-    {
-        UE_LOG(LogTemp, Error, TEXT("This field is required: StartGameRequest::GameMode, PlayFab calls may not work if it remains empty."));
-    }
-    else
-    {
-        writer->WriteIdentifierPrefix(TEXT("GameMode"));
-        writer->WriteValue(GameMode);
-    }
-
-    writer->WriteIdentifierPrefix(TEXT("Region"));
-    writeRegionEnumJSON(pfRegion, writer);
-
-    if (StatisticName.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("StatisticName"));
-        writer->WriteValue(StatisticName);
-    }
-
-    writer->WriteObjectEnd();
-}
-
-bool PlayFab::ClientModels::FStartGameRequest::readFromValue(const TSharedPtr<FJsonObject>& obj)
-{
-    bool HasSucceeded = true;
-
-    const TSharedPtr<FJsonValue> BuildVersionValue = obj->TryGetField(TEXT("BuildVersion"));
-    if (BuildVersionValue.IsValid() && !BuildVersionValue->IsNull())
-    {
-        FString TmpValue;
-        if (BuildVersionValue->TryGetString(TmpValue)) { BuildVersion = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> CharacterIdValue = obj->TryGetField(TEXT("CharacterId"));
-    if (CharacterIdValue.IsValid() && !CharacterIdValue->IsNull())
-    {
-        FString TmpValue;
-        if (CharacterIdValue->TryGetString(TmpValue)) { CharacterId = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> CustomCommandLineDataValue = obj->TryGetField(TEXT("CustomCommandLineData"));
-    if (CustomCommandLineDataValue.IsValid() && !CustomCommandLineDataValue->IsNull())
-    {
-        FString TmpValue;
-        if (CustomCommandLineDataValue->TryGetString(TmpValue)) { CustomCommandLineData = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonObject>* CustomTagsObject;
-    if (obj->TryGetObjectField(TEXT("CustomTags"), CustomTagsObject))
-    {
-        for (TMap<FString, TSharedPtr<FJsonValue>>::TConstIterator It((*CustomTagsObject)->Values); It; ++It)
-        {
-            CustomTags.Add(It.Key(), It.Value()->AsString());
-        }
-    }
-
-    const TSharedPtr<FJsonValue> GameModeValue = obj->TryGetField(TEXT("GameMode"));
-    if (GameModeValue.IsValid() && !GameModeValue->IsNull())
-    {
-        FString TmpValue;
-        if (GameModeValue->TryGetString(TmpValue)) { GameMode = TmpValue; }
-    }
-
-    pfRegion = readRegionFromValue(obj->TryGetField(TEXT("Region")));
-
-    const TSharedPtr<FJsonValue> StatisticNameValue = obj->TryGetField(TEXT("StatisticName"));
-    if (StatisticNameValue.IsValid() && !StatisticNameValue->IsNull())
-    {
-        FString TmpValue;
-        if (StatisticNameValue->TryGetString(TmpValue)) { StatisticName = TmpValue; }
-    }
-
-    return HasSucceeded;
-}
-
-PlayFab::ClientModels::FStartGameResult::~FStartGameResult()
-{
-
-}
-
-void PlayFab::ClientModels::FStartGameResult::writeJSON(JsonWriter& writer) const
-{
-    writer->WriteObjectStart();
-
-    if (Expires.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("Expires"));
-        writer->WriteValue(Expires);
-    }
-
-    if (LobbyID.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("LobbyID"));
-        writer->WriteValue(LobbyID);
-    }
-
-    if (Password.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("Password"));
-        writer->WriteValue(Password);
-    }
-
-    if (ServerIPV4Address.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("ServerIPV4Address"));
-        writer->WriteValue(ServerIPV4Address);
-    }
-
-    if (ServerIPV6Address.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("ServerIPV6Address"));
-        writer->WriteValue(ServerIPV6Address);
-    }
-
-    if (ServerPort.notNull())
-    {
-        writer->WriteIdentifierPrefix(TEXT("ServerPort"));
-        writer->WriteValue(ServerPort);
-    }
-
-    if (ServerPublicDNSName.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("ServerPublicDNSName"));
-        writer->WriteValue(ServerPublicDNSName);
-    }
-
-    if (Ticket.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("Ticket"));
-        writer->WriteValue(Ticket);
-    }
-
-    writer->WriteObjectEnd();
-}
-
-bool PlayFab::ClientModels::FStartGameResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
-{
-    bool HasSucceeded = true;
-
-    const TSharedPtr<FJsonValue> ExpiresValue = obj->TryGetField(TEXT("Expires"));
-    if (ExpiresValue.IsValid() && !ExpiresValue->IsNull())
-    {
-        FString TmpValue;
-        if (ExpiresValue->TryGetString(TmpValue)) { Expires = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> LobbyIDValue = obj->TryGetField(TEXT("LobbyID"));
-    if (LobbyIDValue.IsValid() && !LobbyIDValue->IsNull())
-    {
-        FString TmpValue;
-        if (LobbyIDValue->TryGetString(TmpValue)) { LobbyID = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> PasswordValue = obj->TryGetField(TEXT("Password"));
-    if (PasswordValue.IsValid() && !PasswordValue->IsNull())
-    {
-        FString TmpValue;
-        if (PasswordValue->TryGetString(TmpValue)) { Password = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> ServerIPV4AddressValue = obj->TryGetField(TEXT("ServerIPV4Address"));
-    if (ServerIPV4AddressValue.IsValid() && !ServerIPV4AddressValue->IsNull())
-    {
-        FString TmpValue;
-        if (ServerIPV4AddressValue->TryGetString(TmpValue)) { ServerIPV4Address = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> ServerIPV6AddressValue = obj->TryGetField(TEXT("ServerIPV6Address"));
-    if (ServerIPV6AddressValue.IsValid() && !ServerIPV6AddressValue->IsNull())
-    {
-        FString TmpValue;
-        if (ServerIPV6AddressValue->TryGetString(TmpValue)) { ServerIPV6Address = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> ServerPortValue = obj->TryGetField(TEXT("ServerPort"));
-    if (ServerPortValue.IsValid() && !ServerPortValue->IsNull())
-    {
-        int32 TmpValue;
-        if (ServerPortValue->TryGetNumber(TmpValue)) { ServerPort = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> ServerPublicDNSNameValue = obj->TryGetField(TEXT("ServerPublicDNSName"));
-    if (ServerPublicDNSNameValue.IsValid() && !ServerPublicDNSNameValue->IsNull())
-    {
-        FString TmpValue;
-        if (ServerPublicDNSNameValue->TryGetString(TmpValue)) { ServerPublicDNSName = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> TicketValue = obj->TryGetField(TEXT("Ticket"));
-    if (TicketValue.IsValid() && !TicketValue->IsNull())
-    {
-        FString TmpValue;
-        if (TicketValue->TryGetString(TmpValue)) { Ticket = TmpValue; }
-    }
 
     return HasSucceeded;
 }

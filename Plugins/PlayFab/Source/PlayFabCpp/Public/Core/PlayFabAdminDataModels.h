@@ -448,150 +448,6 @@ namespace AdminModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
-    enum Region
-    {
-        RegionUSCentral,
-        RegionUSEast,
-        RegionEUWest,
-        RegionSingapore,
-        RegionJapan,
-        RegionBrazil,
-        RegionAustralia
-    };
-
-    PLAYFABCPP_API void writeRegionEnumJSON(Region enumVal, JsonWriter& writer);
-    PLAYFABCPP_API Region readRegionFromValue(const TSharedPtr<FJsonValue>& value);
-    PLAYFABCPP_API Region readRegionFromValue(const FString& value);
-
-    struct PLAYFABCPP_API FAddServerBuildRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // [optional] server host regions in which this build should be running and available
-        TArray<Region> ActiveRegions;
-        // unique identifier for the build executable
-        FString BuildId;
-
-        // [optional] appended to the end of the command line when starting game servers
-        FString CommandLineTemplate;
-
-        // [optional] developer comment(s) for this build
-        FString Comment;
-
-        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
-        TMap<FString, FString> CustomTags;
-        // [optional] path to the game server executable. Defaults to gameserver.exe
-        FString ExecutablePath;
-
-        // maximum number of game server instances that can run on a single host machine
-        int32 MaxGamesPerHost;
-
-        /**
-         * minimum capacity of additional game server instances that can be started before the autoscaling service starts new host
-         * machines (given the number of current running host machines and game server instances)
-         */
-        int32 MinFreeGameSlots;
-
-        FAddServerBuildRequest() :
-            FPlayFabCppRequestCommon(),
-            ActiveRegions(),
-            BuildId(),
-            CommandLineTemplate(),
-            Comment(),
-            CustomTags(),
-            ExecutablePath(),
-            MaxGamesPerHost(0),
-            MinFreeGameSlots(0)
-            {}
-
-        FAddServerBuildRequest(const FAddServerBuildRequest& src) = default;
-
-        FAddServerBuildRequest(const TSharedPtr<FJsonObject>& obj) : FAddServerBuildRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FAddServerBuildRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    enum GameBuildStatus
-    {
-        GameBuildStatusAvailable,
-        GameBuildStatusValidating,
-        GameBuildStatusInvalidBuildPackage,
-        GameBuildStatusProcessing,
-        GameBuildStatusFailedToProcess
-    };
-
-    PLAYFABCPP_API void writeGameBuildStatusEnumJSON(GameBuildStatus enumVal, JsonWriter& writer);
-    PLAYFABCPP_API GameBuildStatus readGameBuildStatusFromValue(const TSharedPtr<FJsonValue>& value);
-    PLAYFABCPP_API GameBuildStatus readGameBuildStatusFromValue(const FString& value);
-
-    struct PLAYFABCPP_API FAddServerBuildResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        // [optional] array of regions where this build can used, when it is active
-        TArray<Region> ActiveRegions;
-        // [optional] unique identifier for this build executable
-        FString BuildId;
-
-        // [optional] appended to the end of the command line when starting game servers
-        FString CommandLineTemplate;
-
-        // [optional] developer comment(s) for this build
-        FString Comment;
-
-        // [optional] path to the game server executable. Defaults to gameserver.exe
-        FString ExecutablePath;
-
-        // maximum number of game server instances that can run on a single host machine
-        int32 MaxGamesPerHost;
-
-        /**
-         * minimum capacity of additional game server instances that can be started before the autoscaling service starts new host
-         * machines (given the number of current running host machines and game server instances)
-         */
-        int32 MinFreeGameSlots;
-
-        // [optional] the current status of the build validation and processing steps
-        Boxed<GameBuildStatus> Status;
-
-        // time this build was last modified (or uploaded, if this build has never been modified)
-        FDateTime Timestamp;
-
-        /**
-         * [optional] Unique identifier for the title, found in the Settings > Game Properties section of the PlayFab developer site when a
-         * title has been selected.
-         */
-        FString TitleId;
-
-        FAddServerBuildResult() :
-            FPlayFabCppResultCommon(),
-            ActiveRegions(),
-            BuildId(),
-            CommandLineTemplate(),
-            Comment(),
-            ExecutablePath(),
-            MaxGamesPerHost(0),
-            MinFreeGameSlots(0),
-            Status(),
-            Timestamp(0),
-            TitleId()
-            {}
-
-        FAddServerBuildResult(const FAddServerBuildResult& src) = default;
-
-        FAddServerBuildResult(const TSharedPtr<FJsonObject>& obj) : FAddServerBuildResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FAddServerBuildResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
     struct PLAYFABCPP_API FAddUserVirtualCurrencyRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         /**
@@ -754,49 +610,6 @@ namespace AdminModels
     PLAYFABCPP_API void writeAuthTokenTypeEnumJSON(AuthTokenType enumVal, JsonWriter& writer);
     PLAYFABCPP_API AuthTokenType readAuthTokenTypeFromValue(const TSharedPtr<FJsonValue>& value);
     PLAYFABCPP_API AuthTokenType readAuthTokenTypeFromValue(const FString& value);
-
-    struct PLAYFABCPP_API FAzureResourceSystemData : public PlayFab::FPlayFabCppBaseModel
-    {
-        // [optional] The timestamp of resource creation (UTC)
-        Boxed<FDateTime> CreatedAt;
-
-        // [optional] The identity that created the resource
-        FString CreatedBy;
-
-        // [optional] The type of identity that created the resource
-        FString CreatedByType;
-
-        // [optional] The type of identity that last modified the resource
-        Boxed<FDateTime> LastModifiedAt;
-
-        // [optional] The identity that last modified the resource
-        FString LastModifiedBy;
-
-        // [optional] The type of identity that last modified the resource
-        FString LastModifiedByType;
-
-        FAzureResourceSystemData() :
-            FPlayFabCppBaseModel(),
-            CreatedAt(),
-            CreatedBy(),
-            CreatedByType(),
-            LastModifiedAt(),
-            LastModifiedBy(),
-            LastModifiedByType()
-            {}
-
-        FAzureResourceSystemData(const FAzureResourceSystemData& src) = default;
-
-        FAzureResourceSystemData(const TSharedPtr<FJsonObject>& obj) : FAzureResourceSystemData()
-        {
-            readFromValue(obj);
-        }
-
-        ~FAzureResourceSystemData();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
 
     struct PLAYFABCPP_API FBanInfo : public PlayFab::FPlayFabCppBaseModel
     {
@@ -1239,6 +1052,18 @@ namespace AdminModels
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
+
+    enum ChurnRiskLevel
+    {
+        ChurnRiskLevelNoData,
+        ChurnRiskLevelLowRisk,
+        ChurnRiskLevelMediumRisk,
+        ChurnRiskLevelHighRisk
+    };
+
+    PLAYFABCPP_API void writeChurnRiskLevelEnumJSON(ChurnRiskLevel enumVal, JsonWriter& writer);
+    PLAYFABCPP_API ChurnRiskLevel readChurnRiskLevelFromValue(const TSharedPtr<FJsonValue>& value);
+    PLAYFABCPP_API ChurnRiskLevel readChurnRiskLevelFromValue(const FString& value);
 
     struct PLAYFABCPP_API FCloudScriptFile : public PlayFab::FPlayFabCppBaseModel
     {
@@ -3064,6 +2889,87 @@ namespace AdminModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FPlayerChurnPredictionSegmentFilter : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] Comparison
+        Boxed<SegmentFilterComparison> Comparison;
+
+        // [optional] RiskLevel
+        Boxed<ChurnRiskLevel> RiskLevel;
+
+        FPlayerChurnPredictionSegmentFilter() :
+            FPlayFabCppBaseModel(),
+            Comparison(),
+            RiskLevel()
+            {}
+
+        FPlayerChurnPredictionSegmentFilter(const FPlayerChurnPredictionSegmentFilter& src) = default;
+
+        FPlayerChurnPredictionSegmentFilter(const TSharedPtr<FJsonObject>& obj) : FPlayerChurnPredictionSegmentFilter()
+        {
+            readFromValue(obj);
+        }
+
+        ~FPlayerChurnPredictionSegmentFilter();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FPlayerChurnPredictionTimeSegmentFilter : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] Comparison
+        Boxed<SegmentFilterComparison> Comparison;
+
+        // DurationInDays
+        double DurationInDays;
+
+        FPlayerChurnPredictionTimeSegmentFilter() :
+            FPlayFabCppBaseModel(),
+            Comparison(),
+            DurationInDays(0)
+            {}
+
+        FPlayerChurnPredictionTimeSegmentFilter(const FPlayerChurnPredictionTimeSegmentFilter& src) = default;
+
+        FPlayerChurnPredictionTimeSegmentFilter(const TSharedPtr<FJsonObject>& obj) : FPlayerChurnPredictionTimeSegmentFilter()
+        {
+            readFromValue(obj);
+        }
+
+        ~FPlayerChurnPredictionTimeSegmentFilter();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FPlayerChurnPreviousPredictionSegmentFilter : public PlayFab::FPlayFabCppBaseModel
+    {
+        // [optional] Comparison
+        Boxed<SegmentFilterComparison> Comparison;
+
+        // [optional] RiskLevel
+        Boxed<ChurnRiskLevel> RiskLevel;
+
+        FPlayerChurnPreviousPredictionSegmentFilter() :
+            FPlayFabCppBaseModel(),
+            Comparison(),
+            RiskLevel()
+            {}
+
+        FPlayerChurnPreviousPredictionSegmentFilter(const FPlayerChurnPreviousPredictionSegmentFilter& src) = default;
+
+        FPlayerChurnPreviousPredictionSegmentFilter(const TSharedPtr<FJsonObject>& obj) : FPlayerChurnPreviousPredictionSegmentFilter()
+        {
+            readFromValue(obj);
+        }
+
+        ~FPlayerChurnPreviousPredictionSegmentFilter();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     enum SegmentPushNotificationDevicePlatform
     {
         SegmentPushNotificationDevicePlatformApplePushNotificationService,
@@ -3474,6 +3380,15 @@ namespace AdminModels
         // [optional] Filter property for location.
         TSharedPtr<FLocationSegmentFilter> LocationFilter;
 
+        // [optional] Filter property for current player churn value.
+        TSharedPtr<FPlayerChurnPredictionSegmentFilter> PlayerChurnPredictionFilter;
+
+        // [optional] Filter property for player churn timespan.
+        TSharedPtr<FPlayerChurnPredictionTimeSegmentFilter> PlayerChurnPredictionTimeFilter;
+
+        // [optional] Filter property for previous player churn value.
+        TSharedPtr<FPlayerChurnPreviousPredictionSegmentFilter> PlayerChurnPreviousPredictionFilter;
+
         // [optional] Filter property for push notification.
         TSharedPtr<FPushNotificationSegmentFilter> PushNotificationFilter;
 
@@ -3506,6 +3421,9 @@ namespace AdminModels
             LinkedUserAccountFilter(nullptr),
             LinkedUserAccountHasEmailFilter(nullptr),
             LocationFilter(nullptr),
+            PlayerChurnPredictionFilter(nullptr),
+            PlayerChurnPredictionTimeFilter(nullptr),
+            PlayerChurnPreviousPredictionFilter(nullptr),
             PushNotificationFilter(nullptr),
             StatisticFilter(nullptr),
             TagFilter(nullptr),
@@ -3552,9 +3470,6 @@ namespace AdminModels
 
     struct PLAYFABCPP_API FSegmentModel : public PlayFab::FPlayFabCppBaseModel
     {
-        // [optional] ResourceId of Segment resource
-        FString AzureResourceId;
-
         // [optional] Segment description.
         FString Description;
 
@@ -3575,7 +3490,6 @@ namespace AdminModels
         TArray<FSegmentOrDefinition> SegmentOrDefinitions;
         FSegmentModel() :
             FPlayFabCppBaseModel(),
-            AzureResourceId(),
             Description(),
             EnteredSegmentActions(),
             LastUpdateTime(0),
@@ -4383,6 +4297,69 @@ namespace AdminModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FExportPlayersInSegmentRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // Unique identifier of the requested segment.
+        FString SegmentId;
+
+        FExportPlayersInSegmentRequest() :
+            FPlayFabCppRequestCommon(),
+            SegmentId()
+            {}
+
+        FExportPlayersInSegmentRequest(const FExportPlayersInSegmentRequest& src) = default;
+
+        FExportPlayersInSegmentRequest(const TSharedPtr<FJsonObject>& obj) : FExportPlayersInSegmentRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FExportPlayersInSegmentRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FExportPlayersInSegmentResult : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] Unique identifier of the export for the requested Segment.
+        FString ExportId;
+
+        // [optional] Unique identifier of the requested Segment.
+        FString SegmentId;
+
+        FExportPlayersInSegmentResult() :
+            FPlayFabCppResultCommon(),
+            ExportId(),
+            SegmentId()
+            {}
+
+        FExportPlayersInSegmentResult(const FExportPlayersInSegmentResult& src) = default;
+
+        FExportPlayersInSegmentResult(const TSharedPtr<FJsonObject>& obj) : FExportPlayersInSegmentResult()
+        {
+            readFromValue(obj);
+        }
+
+        ~FExportPlayersInSegmentResult();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    enum GameBuildStatus
+    {
+        GameBuildStatusAvailable,
+        GameBuildStatusValidating,
+        GameBuildStatusInvalidBuildPackage,
+        GameBuildStatusProcessing,
+        GameBuildStatusFailedToProcess
+    };
+
+    PLAYFABCPP_API void writeGameBuildStatusEnumJSON(GameBuildStatus enumVal, JsonWriter& writer);
+    PLAYFABCPP_API GameBuildStatus readGameBuildStatusFromValue(const TSharedPtr<FJsonValue>& value);
+    PLAYFABCPP_API GameBuildStatus readGameBuildStatusFromValue(const FString& value);
+
     struct PLAYFABCPP_API FGameModeInfo : public PlayFab::FPlayFabCppBaseModel
     {
         // specific game mode type
@@ -4890,6 +4867,21 @@ namespace AdminModels
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
+
+    enum Region
+    {
+        RegionUSCentral,
+        RegionUSEast,
+        RegionEUWest,
+        RegionSingapore,
+        RegionJapan,
+        RegionBrazil,
+        RegionAustralia
+    };
+
+    PLAYFABCPP_API void writeRegionEnumJSON(Region enumVal, JsonWriter& writer);
+    PLAYFABCPP_API Region readRegionFromValue(const TSharedPtr<FJsonValue>& value);
+    PLAYFABCPP_API Region readRegionFromValue(const FString& value);
 
     struct PLAYFABCPP_API FGetMatchmakerGameInfoResult : public PlayFab::FPlayFabCppResultCommon
     {
@@ -5773,6 +5765,56 @@ namespace AdminModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
+    struct PLAYFABCPP_API FGetPlayersInSegmentExportRequest : public PlayFab::FPlayFabCppRequestCommon
+    {
+        // Unique identifier of the export for the requested Segment.
+        FString ExportId;
+
+        FGetPlayersInSegmentExportRequest() :
+            FPlayFabCppRequestCommon(),
+            ExportId()
+            {}
+
+        FGetPlayersInSegmentExportRequest(const FGetPlayersInSegmentExportRequest& src) = default;
+
+        FGetPlayersInSegmentExportRequest(const TSharedPtr<FJsonObject>& obj) : FGetPlayersInSegmentExportRequest()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayersInSegmentExportRequest();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
+    struct PLAYFABCPP_API FGetPlayersInSegmentExportResponse : public PlayFab::FPlayFabCppResultCommon
+    {
+        // [optional] Url from which the index file can be downloaded.
+        FString IndexUrl;
+
+        // [optional] Shows the current status of the export
+        FString State;
+
+        FGetPlayersInSegmentExportResponse() :
+            FPlayFabCppResultCommon(),
+            IndexUrl(),
+            State()
+            {}
+
+        FGetPlayersInSegmentExportResponse(const FGetPlayersInSegmentExportResponse& src) = default;
+
+        FGetPlayersInSegmentExportResponse(const TSharedPtr<FJsonObject>& obj) : FGetPlayersInSegmentExportResponse()
+        {
+            readFromValue(obj);
+        }
+
+        ~FGetPlayersInSegmentExportResponse();
+
+        void writeJSON(JsonWriter& writer) const override;
+        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
+    };
+
     struct PLAYFABCPP_API FGetPlayersInSegmentRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         // [optional] Continuation token if retrieving subsequent pages of results.
@@ -6609,135 +6651,6 @@ namespace AdminModels
         }
 
         ~FGetSegmentsResponse();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FGetServerBuildInfoRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // unique identifier of the previously uploaded build executable for which information is being requested
-        FString BuildId;
-
-        FGetServerBuildInfoRequest() :
-            FPlayFabCppRequestCommon(),
-            BuildId()
-            {}
-
-        FGetServerBuildInfoRequest(const FGetServerBuildInfoRequest& src) = default;
-
-        FGetServerBuildInfoRequest(const TSharedPtr<FJsonObject>& obj) : FGetServerBuildInfoRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FGetServerBuildInfoRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FGetServerBuildInfoResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        // [optional] array of regions where this build can used, when it is active
-        TArray<Region> ActiveRegions;
-        // [optional] unique identifier for this build executable
-        FString BuildId;
-
-        // [optional] developer comment(s) for this build
-        FString Comment;
-
-        // [optional] error message, if any, about this build
-        FString ErrorMessage;
-
-        // maximum number of game server instances that can run on a single host machine
-        int32 MaxGamesPerHost;
-
-        /**
-         * minimum capacity of additional game server instances that can be started before the autoscaling service starts new host
-         * machines (given the number of current running host machines and game server instances)
-         */
-        int32 MinFreeGameSlots;
-
-        // [optional] the current status of the build validation and processing steps
-        Boxed<GameBuildStatus> Status;
-
-        // time this build was last modified (or uploaded, if this build has never been modified)
-        FDateTime Timestamp;
-
-        /**
-         * [optional] Unique identifier for the title, found in the Settings > Game Properties section of the PlayFab developer site when a
-         * title has been selected.
-         */
-        FString TitleId;
-
-        FGetServerBuildInfoResult() :
-            FPlayFabCppResultCommon(),
-            ActiveRegions(),
-            BuildId(),
-            Comment(),
-            ErrorMessage(),
-            MaxGamesPerHost(0),
-            MinFreeGameSlots(0),
-            Status(),
-            Timestamp(0),
-            TitleId()
-            {}
-
-        FGetServerBuildInfoResult(const FGetServerBuildInfoResult& src) = default;
-
-        FGetServerBuildInfoResult(const TSharedPtr<FJsonObject>& obj) : FGetServerBuildInfoResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FGetServerBuildInfoResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FGetServerBuildUploadURLRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // unique identifier of the game server build to upload
-        FString BuildId;
-
-        FGetServerBuildUploadURLRequest() :
-            FPlayFabCppRequestCommon(),
-            BuildId()
-            {}
-
-        FGetServerBuildUploadURLRequest(const FGetServerBuildUploadURLRequest& src) = default;
-
-        FGetServerBuildUploadURLRequest(const TSharedPtr<FJsonObject>& obj) : FGetServerBuildUploadURLRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FGetServerBuildUploadURLRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FGetServerBuildUploadURLResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        // [optional] pre-authorized URL for uploading the game server build package
-        FString URL;
-
-        FGetServerBuildUploadURLResult() :
-            FPlayFabCppResultCommon(),
-            URL()
-            {}
-
-        FGetServerBuildUploadURLResult(const FGetServerBuildUploadURLResult& src) = default;
-
-        FGetServerBuildUploadURLResult(const TSharedPtr<FJsonObject>& obj) : FGetServerBuildUploadURLResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FGetServerBuildUploadURLResult();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -7832,47 +7745,6 @@ namespace AdminModels
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
     };
 
-    struct PLAYFABCPP_API FListBuildsRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        FListBuildsRequest() :
-            FPlayFabCppRequestCommon()
-            {}
-
-        FListBuildsRequest(const FListBuildsRequest& src) = default;
-
-        FListBuildsRequest(const TSharedPtr<FJsonObject>& obj) : FListBuildsRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FListBuildsRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FListBuildsResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        // [optional] array of uploaded game server builds
-        TArray<FGetServerBuildInfoResult> Builds;
-        FListBuildsResult() :
-            FPlayFabCppResultCommon(),
-            Builds()
-            {}
-
-        FListBuildsResult(const FListBuildsResult& src) = default;
-
-        FListBuildsResult(const TSharedPtr<FJsonObject>& obj) : FListBuildsResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FListBuildsResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
     struct PLAYFABCPP_API FListOpenIdConnectionRequest : public PlayFab::FPlayFabCppRequestCommon
     {
         FListOpenIdConnectionRequest() :
@@ -8559,9 +8431,13 @@ namespace AdminModels
         // [optional] XBox user ID
         FString XboxUserId;
 
+        // [optional] XBox user sandbox
+        FString XboxUserSandbox;
+
         FUserXboxInfo() :
             FPlayFabCppBaseModel(),
-            XboxUserId()
+            XboxUserId(),
+            XboxUserSandbox()
             {}
 
         FUserXboxInfo(const FUserXboxInfo& src) = default;
@@ -8697,51 +8573,6 @@ namespace AdminModels
         }
 
         ~FLookupUserAccountInfoResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FModifyMatchmakerGameModesRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // previously uploaded build version for which game modes are being specified
-        FString BuildVersion;
-
-        // array of game modes (Note: this will replace all game modes for the indicated build version)
-        TArray<FGameModeInfo> GameModes;
-        FModifyMatchmakerGameModesRequest() :
-            FPlayFabCppRequestCommon(),
-            BuildVersion(),
-            GameModes()
-            {}
-
-        FModifyMatchmakerGameModesRequest(const FModifyMatchmakerGameModesRequest& src) = default;
-
-        FModifyMatchmakerGameModesRequest(const TSharedPtr<FJsonObject>& obj) : FModifyMatchmakerGameModesRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FModifyMatchmakerGameModesRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FModifyMatchmakerGameModesResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        FModifyMatchmakerGameModesResult() :
-            FPlayFabCppResultCommon()
-            {}
-
-        FModifyMatchmakerGameModesResult(const FModifyMatchmakerGameModesResult& src) = default;
-
-        FModifyMatchmakerGameModesResult(const TSharedPtr<FJsonObject>& obj) : FModifyMatchmakerGameModesResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FModifyMatchmakerGameModesResult();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -9044,48 +8875,6 @@ namespace AdminModels
         }
 
         ~FRemovePlayerTagResult();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FRemoveServerBuildRequest : public PlayFab::FPlayFabCppRequestCommon
-    {
-        // unique identifier of the previously uploaded build executable to be removed
-        FString BuildId;
-
-        FRemoveServerBuildRequest() :
-            FPlayFabCppRequestCommon(),
-            BuildId()
-            {}
-
-        FRemoveServerBuildRequest(const FRemoveServerBuildRequest& src) = default;
-
-        FRemoveServerBuildRequest(const TSharedPtr<FJsonObject>& obj) : FRemoveServerBuildRequest()
-        {
-            readFromValue(obj);
-        }
-
-        ~FRemoveServerBuildRequest();
-
-        void writeJSON(JsonWriter& writer) const override;
-        bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
-    };
-
-    struct PLAYFABCPP_API FRemoveServerBuildResult : public PlayFab::FPlayFabCppResultCommon
-    {
-        FRemoveServerBuildResult() :
-            FPlayFabCppResultCommon()
-            {}
-
-        FRemoveServerBuildResult(const FRemoveServerBuildResult& src) = default;
-
-        FRemoveServerBuildResult(const TSharedPtr<FJsonObject>& obj) : FRemoveServerBuildResult()
-        {
-            readFromValue(obj);
-        }
-
-        ~FRemoveServerBuildResult();
 
         void writeJSON(JsonWriter& writer) const override;
         bool readFromValue(const TSharedPtr<FJsonObject>& obj) override;
@@ -9903,6 +9692,8 @@ namespace AdminModels
 
     struct PLAYFABCPP_API FSetTitleDataAndOverridesRequest : public PlayFab::FPlayFabCppRequestCommon
     {
+        // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        TMap<FString, FString> CustomTags;
         /**
          * List of titleData key-value pairs to set/delete. Use an empty value to delete an existing key; use a non-empty value to
          * create/update a key.
@@ -9911,10 +9702,15 @@ namespace AdminModels
         // [optional] Name of the override.
         FString OverrideLabel;
 
+        // [optional] Title Id
+        FString TitleId;
+
         FSetTitleDataAndOverridesRequest() :
             FPlayFabCppRequestCommon(),
+            CustomTags(),
             KeyValues(),
-            OverrideLabel()
+            OverrideLabel(),
+            TitleId()
             {}
 
         FSetTitleDataAndOverridesRequest(const FSetTitleDataAndOverridesRequest& src) = default;
@@ -9951,9 +9747,6 @@ namespace AdminModels
 
     struct PLAYFABCPP_API FSetTitleDataRequest : public PlayFab::FPlayFabCppRequestCommon
     {
-        // [optional] Id of azure resource
-        FString AzureResourceId;
-
         // [optional] The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         TMap<FString, FString> CustomTags;
         /**
@@ -9961,9 +9754,6 @@ namespace AdminModels
          * name.) Keys are trimmed of whitespace. Keys may not begin with the '!' character.
          */
         FString Key;
-
-        // [optional] System Data of the Azure Resource
-        TSharedPtr<FAzureResourceSystemData> SystemData;
 
         /**
          * [optional] Unique identifier for the title, found in the Settings > Game Properties section of the PlayFab developer site when a
@@ -9976,10 +9766,8 @@ namespace AdminModels
 
         FSetTitleDataRequest() :
             FPlayFabCppRequestCommon(),
-            AzureResourceId(),
             CustomTags(),
             Key(),
-            SystemData(nullptr),
             TitleId(),
             Value()
             {}
@@ -9999,12 +9787,8 @@ namespace AdminModels
 
     struct PLAYFABCPP_API FSetTitleDataResult : public PlayFab::FPlayFabCppResultCommon
     {
-        // [optional] Id of azure resource
-        FString AzureResourceId;
-
         FSetTitleDataResult() :
-            FPlayFabCppResultCommon(),
-            AzureResourceId()
+            FPlayFabCppResultCommon()
             {}
 
         FSetTitleDataResult(const FSetTitleDataResult& src) = default;

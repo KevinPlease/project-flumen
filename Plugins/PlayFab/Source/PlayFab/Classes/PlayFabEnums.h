@@ -29,7 +29,7 @@ static FORCEINLINE bool GetEnumValueFromString(const FString& enumTypeName, cons
         fullInput = prefix + input;
     else
         fullInput = input;
-#if ENGINE_MINOR_VERSION < 16
+#if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 16
     output = (EnumType)enumPtr->FindEnumIndex(FName(*fullInput));
 #else
     output = (EnumType)enumPtr->GetIndexByName(FName(*fullInput));
@@ -47,7 +47,7 @@ static FORCEINLINE bool GetEnumValueToString(const FString& enumTypeName, const 
         return false;
     }
 
-#if ENGINE_MINOR_VERSION < 16
+#if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 16
     output = enumPtr->GetEnumName((int32)input);
 #else
     output = enumPtr->GetNameStringByIndex((int32)input);
@@ -64,6 +64,17 @@ UENUM(BlueprintType)
 enum class EAuthTokenType : uint8
 {
     pfenum_Email UMETA(DisplayName = "Email"),
+};
+
+/** ChurnRiskLevel */
+
+UENUM(BlueprintType)
+enum class EChurnRiskLevel : uint8
+{
+    pfenum_NoData UMETA(DisplayName = "NoData"),
+    pfenum_LowRisk UMETA(DisplayName = "LowRisk"),
+    pfenum_MediumRisk UMETA(DisplayName = "MediumRisk"),
+    pfenum_HighRisk UMETA(DisplayName = "HighRisk"),
 };
 
 /** Conditionals */
@@ -1475,6 +1486,16 @@ enum class EExperimentType : uint8
     pfenum_Snapshot UMETA(DisplayName = "Snapshot"),
 };
 
+/** AccessPolicy */
+
+UENUM(BlueprintType)
+enum class EAccessPolicy : uint8
+{
+    pfenum_Public UMETA(DisplayName = "Public"),
+    pfenum_Friends UMETA(DisplayName = "Friends"),
+    pfenum_Private UMETA(DisplayName = "Private"),
+};
+
 /** AzureRegion */
 
 UENUM(BlueprintType)
@@ -1623,6 +1644,15 @@ enum class EContainerFlavor : uint8
     pfenum_Invalid UMETA(DisplayName = "Invalid"),
 };
 
+/** MembershipLock */
+
+UENUM(BlueprintType)
+enum class EMembershipLock : uint8
+{
+    pfenum_Unlocked UMETA(DisplayName = "Unlocked"),
+    pfenum_Locked UMETA(DisplayName = "Locked"),
+};
+
 /** OsPlatform */
 
 UENUM(BlueprintType)
@@ -1630,6 +1660,17 @@ enum class EOsPlatform : uint8
 {
     pfenum_Windows UMETA(DisplayName = "Windows"),
     pfenum_Linux UMETA(DisplayName = "Linux"),
+};
+
+/** OwnerMigrationPolicy */
+
+UENUM(BlueprintType)
+enum class EOwnerMigrationPolicy : uint8
+{
+    pfenum_None UMETA(DisplayName = "None"),
+    pfenum_Automatic UMETA(DisplayName = "Automatic"),
+    pfenum_Manual UMETA(DisplayName = "Manual"),
+    pfenum_Server UMETA(DisplayName = "Server"),
 };
 
 /** ProtocolType */
@@ -1648,6 +1689,15 @@ enum class EServerType : uint8
 {
     pfenum_Container UMETA(DisplayName = "Container"),
     pfenum_Process UMETA(DisplayName = "Process"),
+};
+
+/** SubscriptionType */
+
+UENUM(BlueprintType)
+enum class ESubscriptionType : uint8
+{
+    pfenum_LobbyChange UMETA(DisplayName = "LobbyChange"),
+    pfenum_LobbyInvite UMETA(DisplayName = "LobbyInvite"),
 };
 
 /** TitleMultiplayerServerEnabledStatus */

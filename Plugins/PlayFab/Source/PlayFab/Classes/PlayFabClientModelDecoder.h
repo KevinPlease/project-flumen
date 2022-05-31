@@ -84,6 +84,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Client | Account Management Models")
         static FClientGetPlayFabIDsFromKongregateIDsResult decodeGetPlayFabIDsFromKongregateIDsResultResponse(UPlayFabJsonObject* response);
 
+    /** Decode the GetPlayFabIDsFromNintendoServiceAccountIdsResult response object*/
+    UFUNCTION(BlueprintCallable, Category = "PlayFab | Client | Account Management Models")
+        static FClientGetPlayFabIDsFromNintendoServiceAccountIdsResult decodeGetPlayFabIDsFromNintendoServiceAccountIdsResultResponse(UPlayFabJsonObject* response);
+
     /** Decode the GetPlayFabIDsFromNintendoSwitchDeviceIdsResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Client | Account Management Models")
         static FClientGetPlayFabIDsFromNintendoSwitchDeviceIdsResult decodeGetPlayFabIDsFromNintendoSwitchDeviceIdsResultResponse(UPlayFabJsonObject* response);
@@ -391,10 +395,6 @@ public:
     /** Decode the MatchmakeResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Client | Matchmaking Models")
         static FClientMatchmakeResult decodeMatchmakeResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the StartGameResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Client | Matchmaking Models")
-        static FClientStartGameResult decodeStartGameResultResponse(UPlayFabJsonObject* response);
 
 
 

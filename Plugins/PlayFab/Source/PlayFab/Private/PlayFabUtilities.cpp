@@ -566,6 +566,11 @@ FString UPlayFabUtilities::getErrorText(int32 code)
     case 1533: returnText = "GoogleServiceAccountFailedAuth"; break;
     case 1534: returnText = "GoogleAPIServiceUnavailable"; break;
     case 1535: returnText = "GoogleAPIServiceUnknownError"; break;
+    case 1536: returnText = "NoValidIdentityForAad"; break;
+    case 1537: returnText = "PlayerIdentityLinkNotFound"; break;
+    case 1538: returnText = "PhotonApplicationIdAlreadyInUse"; break;
+    case 1539: returnText = "CloudScriptUnableToDeleteProductionRevision"; break;
+    case 1540: returnText = "CustomIdNotFound"; break;
     case 2001: returnText = "MatchmakingEntityInvalid"; break;
     case 2002: returnText = "MatchmakingPlayerAttributesInvalid"; break;
     case 2016: returnText = "MatchmakingQueueNotFound"; break;
@@ -713,6 +718,15 @@ FString UPlayFabUtilities::getErrorText(int32 code)
     case 15000: returnText = "EventSinkConnectionInvalid"; break;
     case 15001: returnText = "EventSinkConnectionUnauthorized"; break;
     case 15002: returnText = "EventSinkRegionInvalid"; break;
+    case 15003: returnText = "EventSinkLimitExceeded"; break;
+    case 15004: returnText = "EventSinkSasTokenInvalid"; break;
+    case 15005: returnText = "EventSinkNotFound"; break;
+    case 15006: returnText = "EventSinkNameInvalid"; break;
+    case 15007: returnText = "EventSinkSasTokenPermissionInvalid"; break;
+    case 15008: returnText = "EventSinkSecretInvalid"; break;
+    case 15009: returnText = "EventSinkTenantNotFound"; break;
+    case 15010: returnText = "EventSinkAadNotFound"; break;
+    case 15011: returnText = "EventSinkDatabaseNotFound"; break;
     case 16000: returnText = "OperationCanceled"; break;
     case 17000: returnText = "InvalidDisplayNameRandomSuffixLength"; break;
     case 17001: returnText = "AllowNonUniquePlayerDisplayNamesDisableNotAllowed"; break;

@@ -2100,6 +2100,12 @@ void PlayFab::ServerModels::FUserXboxInfo::writeJSON(JsonWriter& writer) const
         writer->WriteValue(XboxUserId);
     }
 
+    if (XboxUserSandbox.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("XboxUserSandbox"));
+        writer->WriteValue(XboxUserSandbox);
+    }
+
     writer->WriteObjectEnd();
 }
 
@@ -2112,6 +2118,13 @@ bool PlayFab::ServerModels::FUserXboxInfo::readFromValue(const TSharedPtr<FJsonO
     {
         FString TmpValue;
         if (XboxUserIdValue->TryGetString(TmpValue)) { XboxUserId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> XboxUserSandboxValue = obj->TryGetField(TEXT("XboxUserSandbox"));
+    if (XboxUserSandboxValue.IsValid() && !XboxUserSandboxValue->IsNull())
+    {
+        FString TmpValue;
+        if (XboxUserSandboxValue->TryGetString(TmpValue)) { XboxUserSandbox = TmpValue; }
     }
 
     return HasSucceeded;
@@ -2581,99 +2594,6 @@ bool PlayFab::ServerModels::FAwardSteamAchievementResult::readFromValue(const TS
         AchievementResults.Add(FAwardSteamAchievementItem(CurrentItem->AsObject()));
     }
 
-
-    return HasSucceeded;
-}
-
-PlayFab::ServerModels::FAzureResourceSystemData::~FAzureResourceSystemData()
-{
-
-}
-
-void PlayFab::ServerModels::FAzureResourceSystemData::writeJSON(JsonWriter& writer) const
-{
-    writer->WriteObjectStart();
-
-    if (CreatedAt.notNull())
-    {
-        writer->WriteIdentifierPrefix(TEXT("CreatedAt"));
-        writeDatetime(CreatedAt, writer);
-    }
-
-    if (CreatedBy.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("CreatedBy"));
-        writer->WriteValue(CreatedBy);
-    }
-
-    if (CreatedByType.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("CreatedByType"));
-        writer->WriteValue(CreatedByType);
-    }
-
-    if (LastModifiedAt.notNull())
-    {
-        writer->WriteIdentifierPrefix(TEXT("LastModifiedAt"));
-        writeDatetime(LastModifiedAt, writer);
-    }
-
-    if (LastModifiedBy.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("LastModifiedBy"));
-        writer->WriteValue(LastModifiedBy);
-    }
-
-    if (LastModifiedByType.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("LastModifiedByType"));
-        writer->WriteValue(LastModifiedByType);
-    }
-
-    writer->WriteObjectEnd();
-}
-
-bool PlayFab::ServerModels::FAzureResourceSystemData::readFromValue(const TSharedPtr<FJsonObject>& obj)
-{
-    bool HasSucceeded = true;
-
-    const TSharedPtr<FJsonValue> CreatedAtValue = obj->TryGetField(TEXT("CreatedAt"));
-    if (CreatedAtValue.IsValid())
-        CreatedAt = readDatetime(CreatedAtValue);
-
-
-    const TSharedPtr<FJsonValue> CreatedByValue = obj->TryGetField(TEXT("CreatedBy"));
-    if (CreatedByValue.IsValid() && !CreatedByValue->IsNull())
-    {
-        FString TmpValue;
-        if (CreatedByValue->TryGetString(TmpValue)) { CreatedBy = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> CreatedByTypeValue = obj->TryGetField(TEXT("CreatedByType"));
-    if (CreatedByTypeValue.IsValid() && !CreatedByTypeValue->IsNull())
-    {
-        FString TmpValue;
-        if (CreatedByTypeValue->TryGetString(TmpValue)) { CreatedByType = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> LastModifiedAtValue = obj->TryGetField(TEXT("LastModifiedAt"));
-    if (LastModifiedAtValue.IsValid())
-        LastModifiedAt = readDatetime(LastModifiedAtValue);
-
-
-    const TSharedPtr<FJsonValue> LastModifiedByValue = obj->TryGetField(TEXT("LastModifiedBy"));
-    if (LastModifiedByValue.IsValid() && !LastModifiedByValue->IsNull())
-    {
-        FString TmpValue;
-        if (LastModifiedByValue->TryGetString(TmpValue)) { LastModifiedBy = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> LastModifiedByTypeValue = obj->TryGetField(TEXT("LastModifiedByType"));
-    if (LastModifiedByTypeValue.IsValid() && !LastModifiedByTypeValue->IsNull())
-    {
-        FString TmpValue;
-        if (LastModifiedByTypeValue->TryGetString(TmpValue)) { LastModifiedByType = TmpValue; }
-    }
 
     return HasSucceeded;
 }
@@ -11198,6 +11118,114 @@ bool PlayFab::ServerModels::FGetPlayFabIDsFromGenericIDsResult::readFromValue(co
     return HasSucceeded;
 }
 
+PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::~FGetPlayFabIDsFromNintendoServiceAccountIdsRequest()
+{
+
+}
+
+void PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    writer->WriteArrayStart(TEXT("NintendoAccountIds"));
+    for (const FString& item : NintendoAccountIds)
+        writer->WriteValue(item);
+    writer->WriteArrayEnd();
+
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsRequest::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    HasSucceeded &= obj->TryGetStringArrayField(TEXT("NintendoAccountIds"), NintendoAccountIds);
+
+    return HasSucceeded;
+}
+
+PlayFab::ServerModels::FNintendoServiceAccountPlayFabIdPair::~FNintendoServiceAccountPlayFabIdPair()
+{
+
+}
+
+void PlayFab::ServerModels::FNintendoServiceAccountPlayFabIdPair::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (NintendoServiceAccountId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("NintendoServiceAccountId"));
+        writer->WriteValue(NintendoServiceAccountId);
+    }
+
+    if (PlayFabId.IsEmpty() == false)
+    {
+        writer->WriteIdentifierPrefix(TEXT("PlayFabId"));
+        writer->WriteValue(PlayFabId);
+    }
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ServerModels::FNintendoServiceAccountPlayFabIdPair::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TSharedPtr<FJsonValue> NintendoServiceAccountIdValue = obj->TryGetField(TEXT("NintendoServiceAccountId"));
+    if (NintendoServiceAccountIdValue.IsValid() && !NintendoServiceAccountIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (NintendoServiceAccountIdValue->TryGetString(TmpValue)) { NintendoServiceAccountId = TmpValue; }
+    }
+
+    const TSharedPtr<FJsonValue> PlayFabIdValue = obj->TryGetField(TEXT("PlayFabId"));
+    if (PlayFabIdValue.IsValid() && !PlayFabIdValue->IsNull())
+    {
+        FString TmpValue;
+        if (PlayFabIdValue->TryGetString(TmpValue)) { PlayFabId = TmpValue; }
+    }
+
+    return HasSucceeded;
+}
+
+PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::~FGetPlayFabIDsFromNintendoServiceAccountIdsResult()
+{
+
+}
+
+void PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::writeJSON(JsonWriter& writer) const
+{
+    writer->WriteObjectStart();
+
+    if (Data.Num() != 0)
+    {
+        writer->WriteArrayStart(TEXT("Data"));
+        for (const FNintendoServiceAccountPlayFabIdPair& item : Data)
+            item.writeJSON(writer);
+        writer->WriteArrayEnd();
+    }
+
+
+    writer->WriteObjectEnd();
+}
+
+bool PlayFab::ServerModels::FGetPlayFabIDsFromNintendoServiceAccountIdsResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
+{
+    bool HasSucceeded = true;
+
+    const TArray<TSharedPtr<FJsonValue>>&DataArray = FPlayFabJsonHelpers::ReadArray(obj, TEXT("Data"));
+    for (int32 Idx = 0; Idx < DataArray.Num(); Idx++)
+    {
+        TSharedPtr<FJsonValue> CurrentItem = DataArray[Idx];
+        Data.Add(FNintendoServiceAccountPlayFabIdPair(CurrentItem->AsObject()));
+    }
+
+
+    return HasSucceeded;
+}
+
 PlayFab::ServerModels::FGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest::~FGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest()
 {
 
@@ -18241,19 +18269,12 @@ bool PlayFab::ServerModels::FSetPublisherDataResult::readFromValue(const TShared
 
 PlayFab::ServerModels::FSetTitleDataRequest::~FSetTitleDataRequest()
 {
-    //if (SystemData != nullptr) delete SystemData;
 
 }
 
 void PlayFab::ServerModels::FSetTitleDataRequest::writeJSON(JsonWriter& writer) const
 {
     writer->WriteObjectStart();
-
-    if (AzureResourceId.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("AzureResourceId"));
-        writer->WriteValue(AzureResourceId);
-    }
 
     if (CustomTags.Num() != 0)
     {
@@ -18276,12 +18297,6 @@ void PlayFab::ServerModels::FSetTitleDataRequest::writeJSON(JsonWriter& writer) 
         writer->WriteValue(Key);
     }
 
-    if (SystemData.IsValid())
-    {
-        writer->WriteIdentifierPrefix(TEXT("SystemData"));
-        SystemData->writeJSON(writer);
-    }
-
     if (TitleId.IsEmpty() == false)
     {
         writer->WriteIdentifierPrefix(TEXT("TitleId"));
@@ -18301,13 +18316,6 @@ bool PlayFab::ServerModels::FSetTitleDataRequest::readFromValue(const TSharedPtr
 {
     bool HasSucceeded = true;
 
-    const TSharedPtr<FJsonValue> AzureResourceIdValue = obj->TryGetField(TEXT("AzureResourceId"));
-    if (AzureResourceIdValue.IsValid() && !AzureResourceIdValue->IsNull())
-    {
-        FString TmpValue;
-        if (AzureResourceIdValue->TryGetString(TmpValue)) { AzureResourceId = TmpValue; }
-    }
-
     const TSharedPtr<FJsonObject>* CustomTagsObject;
     if (obj->TryGetObjectField(TEXT("CustomTags"), CustomTagsObject))
     {
@@ -18322,12 +18330,6 @@ bool PlayFab::ServerModels::FSetTitleDataRequest::readFromValue(const TSharedPtr
     {
         FString TmpValue;
         if (KeyValue->TryGetString(TmpValue)) { Key = TmpValue; }
-    }
-
-    const TSharedPtr<FJsonValue> SystemDataValue = obj->TryGetField(TEXT("SystemData"));
-    if (SystemDataValue.IsValid() && !SystemDataValue->IsNull())
-    {
-        SystemData = MakeShareable(new FAzureResourceSystemData(SystemDataValue->AsObject()));
     }
 
     const TSharedPtr<FJsonValue> TitleIdValue = obj->TryGetField(TEXT("TitleId"));
@@ -18356,25 +18358,12 @@ void PlayFab::ServerModels::FSetTitleDataResult::writeJSON(JsonWriter& writer) c
 {
     writer->WriteObjectStart();
 
-    if (AzureResourceId.IsEmpty() == false)
-    {
-        writer->WriteIdentifierPrefix(TEXT("AzureResourceId"));
-        writer->WriteValue(AzureResourceId);
-    }
-
     writer->WriteObjectEnd();
 }
 
 bool PlayFab::ServerModels::FSetTitleDataResult::readFromValue(const TSharedPtr<FJsonObject>& obj)
 {
     bool HasSucceeded = true;
-
-    const TSharedPtr<FJsonValue> AzureResourceIdValue = obj->TryGetField(TEXT("AzureResourceId"));
-    if (AzureResourceIdValue.IsValid() && !AzureResourceIdValue->IsNull())
-    {
-        FString TmpValue;
-        if (AzureResourceIdValue->TryGetString(TmpValue)) { AzureResourceId = TmpValue; }
-    }
 
     return HasSucceeded;
 }

@@ -184,29 +184,9 @@ public:
     // Custom Server Management
     //////////////////////////////////////////////////////
 
-    /** Decode the AddServerBuildResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
-        static FAdminAddServerBuildResult decodeAddServerBuildResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the GetServerBuildInfoResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
-        static FAdminGetServerBuildInfoResult decodeGetServerBuildInfoResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the GetServerBuildUploadURLResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
-        static FAdminGetServerBuildUploadURLResult decodeGetServerBuildUploadURLResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the ListBuildsResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
-        static FAdminListBuildsResult decodeListBuildsResultResponse(UPlayFabJsonObject* response);
-
     /** Decode the ModifyServerBuildResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
         static FAdminModifyServerBuildResult decodeModifyServerBuildResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the RemoveServerBuildResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Custom Server Management Models")
-        static FAdminRemoveServerBuildResult decodeRemoveServerBuildResultResponse(UPlayFabJsonObject* response);
 
 
 
@@ -221,10 +201,6 @@ public:
     /** Decode the GetMatchmakerGameModesResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Matchmaking Models")
         static FAdminGetMatchmakerGameModesResult decodeGetMatchmakerGameModesResultResponse(UPlayFabJsonObject* response);
-
-    /** Decode the ModifyMatchmakerGameModesResult response object*/
-    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | Matchmaking Models")
-        static FAdminModifyMatchmakerGameModesResult decodeModifyMatchmakerGameModesResultResponse(UPlayFabJsonObject* response);
 
 
 
@@ -320,6 +296,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")
         static FAdminAddPlayerTagResult decodeAddPlayerTagResultResponse(UPlayFabJsonObject* response);
 
+    /** Decode the ExportPlayersInSegmentResult response object*/
+    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")
+        static FAdminExportPlayersInSegmentResult decodeExportPlayersInSegmentResultResponse(UPlayFabJsonObject* response);
+
     /** Decode the GetAllSegmentsResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")
         static FAdminGetAllSegmentsResult decodeGetAllSegmentsResultResponse(UPlayFabJsonObject* response);
@@ -335,6 +315,10 @@ public:
     /** Decode the GetPlayerTagsResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")
         static FAdminGetPlayerTagsResult decodeGetPlayerTagsResultResponse(UPlayFabJsonObject* response);
+
+    /** Decode the GetPlayersInSegmentExportResponse response object*/
+    UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")
+        static FAdminGetPlayersInSegmentExportResponse decodeGetPlayersInSegmentExportResponseResponse(UPlayFabJsonObject* response);
 
     /** Decode the RemovePlayerTagResult response object*/
     UFUNCTION(BlueprintCallable, Category = "PlayFab | Admin | PlayStream Models")

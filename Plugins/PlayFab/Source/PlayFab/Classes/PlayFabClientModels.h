@@ -351,6 +351,27 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct PLAYFAB_API FClientGetPlayFabIDsFromNintendoServiceAccountIdsRequest : public FPlayFabRequestCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    /** Array of unique Nintendo Switch Account identifiers for which the title needs to get PlayFab identifiers. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Account Management Models")
+        FString NintendoAccountIds;
+};
+
+/** For Nintendo Service Account identifiers which have not been linked to PlayFab accounts, null will be returned. */
+USTRUCT(BlueprintType)
+struct PLAYFAB_API FClientGetPlayFabIDsFromNintendoServiceAccountIdsResult : public FPlayFabResultCommon
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    /** Mapping of Nintendo Switch Service Account identifiers to PlayFab identifiers. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Account Management Models")
+        TArray<UPlayFabJsonObject*> Data;
+};
+
+USTRUCT(BlueprintType)
 struct PLAYFAB_API FClientGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest : public FPlayFabRequestCommon
 {
     GENERATED_USTRUCT_BODY()
@@ -2935,66 +2956,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
         EMatchmakeStatus Status;
     /** server authorization ticket (used by RedeemMatchmakerTicket to validate user insertion into the game) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString Ticket;
-};
-
-/** This API must be enabled for use as an option in the game manager website. It is disabled by default. */
-USTRUCT(BlueprintType)
-struct PLAYFAB_API FClientStartGameRequest : public FPlayFabRequestCommon
-{
-    GENERATED_USTRUCT_BODY()
-public:
-    /** version information for the build of the game server which is to be started */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString BuildVersion;
-    /** character to use for stats based matching. Leave null to use account stats */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString CharacterId;
-    /** custom command line argument when starting game server process */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString CustomCommandLineData;
-    /** The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.). */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        UPlayFabJsonObject* CustomTags = nullptr;
-    /** the title-defined game mode this server is to be running (defaults to 0 if there is only one mode) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString GameMode;
-    /** the region to associate this server with for match filtering */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        ERegion Region;
-    /** player statistic for others to use in finding this game. May be null for no stat-based matching */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString StatisticName;
-};
-
-USTRUCT(BlueprintType)
-struct PLAYFAB_API FClientStartGameResult : public FPlayFabResultCommon
-{
-    GENERATED_USTRUCT_BODY()
-public:
-    /** timestamp for when the server should expire, if applicable */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString Expires;
-    /** unique identifier for the lobby of the server started */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString LobbyID;
-    /** password required to log into the server */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString Password;
-    /** server IPV4 address */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString ServerIPV4Address;
-    /** server IPV6 address */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString ServerIPV6Address;
-    /** port on the server to be used for communication */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        int32 ServerPort = 0;
-    /** server public DNS name */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
-        FString ServerPublicDNSName;
-    /** unique identifier for the server */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayFab | Client | Matchmaking Models")
         FString Ticket;
 };

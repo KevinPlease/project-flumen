@@ -18,6 +18,90 @@
 
 
 ///////////////////////////////////////////////////////
+// Lobby
+//////////////////////////////////////////////////////
+
+FMultiplayerCreateLobbyResult UPlayFabMultiplayerModelDecoder::decodeCreateLobbyResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerCreateLobbyResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.ConnectionString = !(dataObj->HasField("ConnectionString")) ? TEXT("") : dataObj->GetStringField("ConnectionString");
+    tempStruct.LobbyId = !(dataObj->HasField("LobbyId")) ? TEXT("") : dataObj->GetStringField("LobbyId");
+
+    return tempStruct;
+}
+
+FMultiplayerLobbyEmptyResult UPlayFabMultiplayerModelDecoder::decodeLobbyEmptyResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerLobbyEmptyResult tempStruct;
+
+
+    return tempStruct;
+}
+
+FMultiplayerFindFriendLobbiesResult UPlayFabMultiplayerModelDecoder::decodeFindFriendLobbiesResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerFindFriendLobbiesResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.Lobbies = !(dataObj->HasField("Lobbies")) ? TArray<UPlayFabJsonObject*>() : dataObj->GetObjectArrayField("Lobbies");
+    tempStruct.Pagination = !(dataObj->HasField("Pagination")) ? nullptr : dataObj->GetObjectField("Pagination");
+
+    return tempStruct;
+}
+
+FMultiplayerFindLobbiesResult UPlayFabMultiplayerModelDecoder::decodeFindLobbiesResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerFindLobbiesResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.Lobbies = !(dataObj->HasField("Lobbies")) ? TArray<UPlayFabJsonObject*>() : dataObj->GetObjectArrayField("Lobbies");
+    tempStruct.Pagination = !(dataObj->HasField("Pagination")) ? nullptr : dataObj->GetObjectField("Pagination");
+
+    return tempStruct;
+}
+
+FMultiplayerGetLobbyResult UPlayFabMultiplayerModelDecoder::decodeGetLobbyResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerGetLobbyResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.Lobby = !(dataObj->HasField("Lobby")) ? nullptr : dataObj->GetObjectField("Lobby");
+
+    return tempStruct;
+}
+
+FMultiplayerJoinLobbyResult UPlayFabMultiplayerModelDecoder::decodeJoinLobbyResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerJoinLobbyResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.LobbyId = !(dataObj->HasField("LobbyId")) ? TEXT("") : dataObj->GetStringField("LobbyId");
+
+    return tempStruct;
+}
+
+FMultiplayerSubscribeToLobbyResourceResult UPlayFabMultiplayerModelDecoder::decodeSubscribeToLobbyResourceResultResponse(UPlayFabJsonObject* response)
+{
+    // Temp ustruct
+    FMultiplayerSubscribeToLobbyResourceResult tempStruct;
+    UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
+
+    tempStruct.Topic = !(dataObj->HasField("Topic")) ? TEXT("") : dataObj->GetStringField("Topic");
+
+    return tempStruct;
+}
+
+
+
+///////////////////////////////////////////////////////
 // Matchmaking
 //////////////////////////////////////////////////////
 
@@ -85,6 +169,7 @@ FMultiplayerGetMatchResult UPlayFabMultiplayerModelDecoder::decodeGetMatchResult
     FMultiplayerGetMatchResult tempStruct;
     UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
 
+    tempStruct.ArrangementString = !(dataObj->HasField("ArrangementString")) ? TEXT("") : dataObj->GetStringField("ArrangementString");
     tempStruct.MatchId = !(dataObj->HasField("MatchId")) ? TEXT("") : dataObj->GetStringField("MatchId");
     tempStruct.Members = !(dataObj->HasField("Members")) ? TArray<UPlayFabJsonObject*>() : dataObj->GetObjectArrayField("Members");
     tempStruct.RegionPreferences = !(dataObj->HasField("RegionPreferences")) ? TEXT("") : FString::Join(dataObj->GetStringArrayField("RegionPreferences"), TEXT(","));
@@ -100,6 +185,7 @@ FMultiplayerGetMatchmakingTicketResult UPlayFabMultiplayerModelDecoder::decodeGe
     UPlayFabJsonObject* dataObj = !(response->HasField("data")) ? nullptr : response->GetObjectField("data");
 
     tempStruct.CancellationReasonString = !(dataObj->HasField("CancellationReasonString")) ? TEXT("") : dataObj->GetStringField("CancellationReasonString");
+    tempStruct.ChangeNumber = !(dataObj->HasField("ChangeNumber")) ? 0 : int(dataObj->GetNumberField("ChangeNumber"));
     tempStruct.Created = !(dataObj->HasField("Created")) ? TEXT("") : dataObj->GetStringField("Created");
     tempStruct.Creator = !(dataObj->HasField("Creator")) ? nullptr : dataObj->GetObjectField("Creator");
     tempStruct.GiveUpAfterSeconds = !(dataObj->HasField("GiveUpAfterSeconds")) ? 0 : int(dataObj->GetNumberField("GiveUpAfterSeconds"));
@@ -381,7 +467,6 @@ FMultiplayerGetBuildResponse UPlayFabMultiplayerModelDecoder::decodeGetBuildResp
     tempStruct.RegionConfigurations = !(dataObj->HasField("RegionConfigurations")) ? TArray<UPlayFabJsonObject*>() : dataObj->GetObjectArrayField("RegionConfigurations");
     tempStruct.ServerType = !(dataObj->HasField("ServerType")) ? TEXT("") : dataObj->GetStringField("ServerType");
     tempStruct.StartMultiplayerServerCommand = !(dataObj->HasField("StartMultiplayerServerCommand")) ? TEXT("") : dataObj->GetStringField("StartMultiplayerServerCommand");
-    tempStruct.UseStreamingForAssetDownloads = !(dataObj->HasField("UseStreamingForAssetDownloads")) ? false : dataObj->GetBoolField("UseStreamingForAssetDownloads");
     GetEnumValueFromString<EAzureVmSize>(TEXT("EAzureVmSize"), dataObj->GetStringField("VmSize"), tempStruct.VmSize);
 
     return tempStruct;
