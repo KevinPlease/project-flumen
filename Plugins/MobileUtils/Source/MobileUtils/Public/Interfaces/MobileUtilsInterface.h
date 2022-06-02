@@ -42,4 +42,9 @@ public:
 	* Open app store
 	*/
 	virtual void LaunchAppStore();
+
+	/**
+	* Get unique player id (used for iOS Game Center)
+	*/
+	virtual FString GetGameCenterPlayerId();
 };

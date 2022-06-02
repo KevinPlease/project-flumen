@@ -57,4 +57,10 @@ class MOBILEUTILS_API UMobileUtilsBlueprintLibrary : public UBlueprintFunctionLi
 	*/
 	UFUNCTION(BlueprintCallable, Category = MobileUtils)
 	static void LaunchAppStore();
+
+	/**
+	* Used to access game center player id on IOS
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = MobileUtils)
+	static FString GetGameCenterPlayerId();
 };
