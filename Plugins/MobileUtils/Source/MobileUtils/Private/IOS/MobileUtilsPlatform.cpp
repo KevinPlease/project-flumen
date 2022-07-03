@@ -5,9 +5,6 @@
 #include "MobileUtilsPlatform.h"
 
 #import <Reachability/Reachability.h>
-#include "OnlineIdentityInterfaceIOS.h"
-#include "OnlineSubsystemIOS.h"
-#include "OnlineSubsystem.h"
 //#import <SAMKeychain/SAMKeychain.h>
 
 
@@ -66,30 +63,4 @@ void FMobileUtilsPlatform::LaunchAppStore()
 		}];
 	
 
-}
-
-FString FMobileUtilsPlatform::GetGameCenterPlayerId()
-{
-#if PLATFORM_ANDROID
-	return FString("");
-#endif
-
-	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::GetByPlatform();
-	FOnlineIdentityIOS* IdentityInterface = static_cast<FOnlineIdentityIOS*>(OnlineSubsystem->GetIdentityInterface().Get());
-	
-	check(IdentityInterface != nullptr);
-
-	if ([GKLocalPlayer localPlayer] == nil)
-	{
-		UE_LOG_ONLINE_EXTERNALUI(Log, TEXT("Game Center localPlayer is null."));
-		return FString("");
-	}
-
-	if ([GKLocalPlayer localPlayer].isAuthenticated)
-	{
-		return FString("");
-	}
-
-	const FString PlayerId(FOnlineSubsystemIOS::GetPlayerId(IdentityInterface->GetLocalGameCenterUser()));
-	return PlayerId;
 }

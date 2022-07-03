@@ -22,7 +22,6 @@ public:
 	virtual FString GetPersistentUniqueDeviceId() override;
 	virtual FString GetDeviceId() override;
 	virtual void LaunchAppStore() override;
-	virtual FString GetGameCenterPlayerId() override;
 
 	// JNI Methods
 	static jmethodID CheckInternetConnectionMethod;

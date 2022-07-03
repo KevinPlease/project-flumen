@@ -70,12 +70,3 @@ void UMobileUtilsBlueprintLibrary::LaunchAppStore()
 #else
 #endif
 }
-
-FString UMobileUtilsBlueprintLibrary::GetGameCenterPlayerId()
-{
-#if PLATFORM_ANDROID || PLATFORM_IOS
-	return IMobileUtils::Get().GetPlatformInterface()->GetGameCenterPlayerId();
-#else
-	return FString("");
-#endif
-}

@@ -83,8 +83,3 @@ void FMobileUtilsPlatform::LaunchAppStore()
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, FMobileUtilsPlatform::OpenAppStoreMethod);
 	}
 }
-
-FString FMobileUtilsPlatform::GetGameCenterPlayerId()
-{
-	return FString("");
-}
